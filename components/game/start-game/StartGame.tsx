@@ -3,19 +3,13 @@ import { StyleSheet, Text, View } from 'react-native';
 import { ActionButton } from '../../ui/actions/ActionButton';
 import { useAppDispatch } from '../../../store/hooks';
 import { colorBase } from '../../../colors/colorBase';
-import {
-  introMusicFunc,
-  updateGameProgress,
-} from '../../../store/slices/globalStateReducer';
+import { updateGameProgress } from '../../../store/slices/globalStateReducer';
+import { introMusicFunc } from '../../../store/slices/gameState';
 
 export const StartGame = () => {
   const dispatch = useAppDispatch();
   const [timeLeft, setTimeLeft] = useState<number>(19);
   const [countdownStarted, setCountdownStarted] = useState<boolean>(false);
-
-  useEffect(() => {
-    dispatch(introMusicFunc(false));
-  }, []);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -31,13 +25,10 @@ export const StartGame = () => {
 
   const handleStartGame = () => {
     setCountdownStarted(true);
+    dispatch(introMusicFunc(true));
   };
   const handleBack = () => {
     dispatch(updateGameProgress('INIT'));
-  };
-  const handleStartMusic = () => {
-    console.log('start');
-    dispatch(introMusicFunc(true));
   };
 
   return (
@@ -58,17 +49,9 @@ export const StartGame = () => {
             textStyle={styles.buttonText}
             buttonStyle={styles.button}
           />
-          <ActionButton
-            title="Muzyka"
-            size="large"
-            onPress={handleStartMusic}
-            backgroundColor="successDark"
-            textStyle={styles.buttonText}
-            buttonStyle={styles.button}
-          />
-          <ActionButton title="Wróć" onPress={handleBack} backgroundColor="blueDark" />
         </View>
       )}
+      <ActionButton title="Wróć" onPress={handleBack} backgroundColor="blueDark" />
     </View>
   );
 };

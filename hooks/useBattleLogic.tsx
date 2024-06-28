@@ -7,6 +7,8 @@ import {
   blueTeamActiveButton,
   redTeamCollectButton,
   blueTeamCollectButton,
+  redFaultButtonDisabledFunc,
+  blueFaultButtonDisabledFunc,
 } from '../store/slices/teamsState';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import useAnswerVisibilityChecks from './useAnswerVisibilityChecks';
@@ -22,9 +24,7 @@ const useBattleLogic = () => {
   const { currentQuestion, gameStatus, roundNumber } = useAppSelector(
     (state) => state.gameState
   );
-  const { questions } = useAppSelector(
-    (state) => state.globalState
-  );
+  const { questions } = useAppSelector((state) => state.globalState);
   const {
     firstAnswerVisibleAndOthersNot,
     twoAnswersVisible,
@@ -52,13 +52,21 @@ const useBattleLogic = () => {
         dispatch(updateGameStatus('BOARD-BLOCKED'));
       } else if (anyAnswerVisible) {
         if (blueTeam.fault.length || redTeam.fault.length) {
-          dispatch(updateGameStatus('GAME'));
-          if (blueTeam.fault.length) {
-            dispatch(redTeamActive(true));
-          } else {
-            dispatch(blueTeamActive(true));
-          }
-          dispatch(clearFaultFunc());
+          dispatch(redFaultButtonDisabledFunc(true));
+          dispatch(blueFaultButtonDisabledFunc(true));
+          dispatch(updateGameStatus('BOARD-BLOCKED'));
+          setTimeout(() => {
+            dispatch(updateGameStatus('GAME'));
+            if (blueTeam.fault.length) {
+              dispatch(redTeamActive(true));
+            } else {
+              dispatch(blueTeamActive(true));
+            }
+            dispatch(clearFaultFunc());
+            dispatch(redFaultButtonDisabledFunc(false));
+            dispatch(blueFaultButtonDisabledFunc(false));
+            dispatch(updateGameStatus('GAME'));
+          }, 5000);
         } else if (blueTeam.fault.length === 1) {
           dispatch(redTeamActive(true));
           dispatch(clearFaultFunc());

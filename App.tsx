@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import store from './store/store';
 import useWebSocket from './hooks/useWebSocket';
 import { useAppSelector } from './store/hooks';
+import { WebsocketBoard, WebsocketTeam } from './types/game.type';
 
 interface TestIpProps {
   handleIpValue: (ipAddress: string) => void;
@@ -39,18 +40,19 @@ const TestIp: FC<TestIpProps> = ({ handleIpValue, ipAddress, handleSubmit }) => 
 const AppContent: FC = () => {
   const [ipAddress, setIpAddress] = useState<string>('');
   const { storedValue, setValue } = useAsyncStorage('lastIp');
+
   const [connect, setConnect] = useState<IConnect>({
-    ipAddress: storedValue,
+    ipAddress: '',
     message: '',
     status: null,
   });
 
-  const { gameProgress, introMusic } = useAppSelector((state) => state.globalState);
-  const gameState = useAppSelector(state => state.gameState)
-  const { blueTeam, redTeam } = useAppSelector(state => state.teams)
+  const gameProgress = useAppSelector((state) => state.globalState.gameProgress);
+  const gameState = useAppSelector((state) => state.gameState);
+  const { blueTeam, redTeam } = useAppSelector((state) => state.teams);
 
-  const wsPort = 8181;
-  const wsUrl = `ws://${connect.ipAddress}:${wsPort}`;
+  const wsPort = 81;
+  const wsUrl = connect.ipAddress ? `ws://${connect.ipAddress}:${wsPort}` : '';
 
   const { status, sendMessage } = useWebSocket(wsUrl);
 
@@ -61,7 +63,7 @@ const AppContent: FC = () => {
   const handleSubmit = useCallback(
     async (ipAddress: string) => {
       try {
-        const response = await fetch(`http://${ipAddress}:3000`, {
+        const response = await fetch(`http://${ipAddress}:8080/get-ip`, {
           method: 'GET',
         });
         if (response.ok) {
@@ -87,41 +89,71 @@ const AppContent: FC = () => {
         });
       }
     },
-    [ipAddress]
+    [ipAddress, setValue]
   );
 
   useEffect(() => {
-    if (storedValue) {
+    if (storedValue && connect.status === null) {
       handleSubmit(storedValue);
     }
-  }, [storedValue]);
+  }, [storedValue, handleSubmit, connect.status]);
 
   useEffect(() => {
-    console.log('introMusic', introMusic);
-    const sendData = {
-      redTeam: {
-        score: redTeam.totalScore,
+    if (status === 'open') {
+      sendMessage({ type: 'connect', payload: 'TABLET' });
+    }
+  }, [status, sendMessage]);
+
+  useEffect(() => {
+    const sendTeam: WebsocketTeam = {
+      type: 'red-team',
+      payload: {
+        teamType: 'RED',
+        totalScore: redTeam.totalScore,
         name: redTeam.name,
         fault: redTeam.fault,
       },
-      blueTeam: {
-        score: blueTeam.totalScore,
+    };
+
+    if (status === 'open') {
+      sendMessage(sendTeam);
+    }
+  }, [status, redTeam]);
+
+  useEffect(() => {
+    const sendTeam: WebsocketTeam = {
+      type: 'blue-team',
+      payload: {
+        teamType: 'BLUE',
+        totalScore: blueTeam.totalScore,
         name: blueTeam.name,
         fault: blueTeam.fault,
       },
-      board: {
-        currentQuestion: gameState.currentQuestion,
+    };
+
+    if (status === 'open') {
+      sendMessage(sendTeam);
+    }
+  }, [status, blueTeam]);
+
+  useEffect(() => {
+    const sendBoard: WebsocketBoard = {
+      type: 'board',
+      payload: {
+        answers: gameState.currentQuestion.answers,
+        question: gameState.currentQuestion.question,
         score: gameState.score,
         roundNumber: gameState.roundNumber,
         gameProgress: gameProgress,
         gameStatus: gameState.gameStatus,
-        introMusic: introMusic,
+        introMusic: gameState.introMusic,
       },
     };
+
     if (status === 'open') {
-      sendMessage(sendData);
+      sendMessage(sendBoard);
     }
-  }, [status, gameState, redTeam, blueTeam, introMusic]);
+  }, [status, gameState, gameProgress]);
 
   if (!storedValue || connect.status !== 'success') {
     return (
@@ -135,6 +167,7 @@ const AppContent: FC = () => {
       </View>
     );
   }
+
   return (
     <View style={styles.appContainer}>
       <Game />

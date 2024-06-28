@@ -26,7 +26,6 @@ export const GameBoard = () => {
     showNextRoundButton,
     showEndGameButton,
     roundNumber,
-    gameStatus,
   } = useAppSelector((state) => state.gameState);
 
   const [openBackModal, setOpenBackModal] = useState(false);
@@ -73,10 +72,6 @@ export const GameBoard = () => {
       <View style={styles.question}>
         <Text style={styles.questionText}>Runda {roundNumber + 1}</Text>
       </View>
-      <View style={styles.question}>
-        <Text style={styles.questionText}>STATUS: {gameStatus}</Text>
-      </View>
-
       <View style={styles.navigation}>
         {showNextBattleButton && (
           <ActionButton onPress={handleNextBattle} title="Następna Bitwa" />

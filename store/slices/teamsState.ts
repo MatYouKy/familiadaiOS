@@ -102,10 +102,12 @@ const teams = createSlice({
       state.redTeam = {
         ...initialState.redTeam,
         totalScore: state.redTeam.totalScore,
+        name: state.redTeam.name
       };
       state.blueTeam = {
         ...initialState.blueTeam,
         totalScore: state.blueTeam.totalScore,
+        name: state.blueTeam.name
       };
     },
   },

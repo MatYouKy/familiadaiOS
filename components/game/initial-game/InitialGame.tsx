@@ -6,19 +6,15 @@ import useAsyncStorage from '../../../hooks/useAsyncStorage';
 import { ICompetition } from '../../../types/game.type';
 import { Divider } from '../../ui/divider/Divider';
 import { GameList } from './GameList';
-import { useAppDispatch } from '../../../store/hooks';
-import { introMusicFunc } from '../../../store/slices/globalStateReducer';
+
 
 const InitialGame = () => {
-  const dispatch = useAppDispatch();
   const { storedValue: ipAddress } = useAsyncStorage('lastIp');
   const [competitions, setCompetitions] = useState<ICompetition[]>([]);
-  useEffect(() => {
-    dispatch(introMusicFunc(false));
-  }, []);
+
 
   const handleQuestion = useCallback(() => {
-    fetch(`http://${ipAddress}:3000/questions.json`)
+    fetch(`http://${ipAddress}:8080/questions`)
       .then((response) => response.json())
       .then((data) => {
         if (data && data.competitions) {

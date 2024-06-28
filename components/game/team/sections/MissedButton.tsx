@@ -4,6 +4,7 @@ import { Missed } from '../../../ui/Missed/BigMissed';
 import { colorBase } from '../../../../colors/colorBase';
 import { TeamType } from '../../../../types/game.type';
 import useAddTeamFault from '../../../../hooks/useAddTeamFault';
+import { useAppSelector } from '../../../../store/hooks';
 
 interface IMissedButton {
   teamType: TeamType;
@@ -11,19 +12,27 @@ interface IMissedButton {
 
 export const MissedButton: FC<IMissedButton> = ({ teamType }) => {
   const addTeamFault = useAddTeamFault();
+  const redButtonDisabled = useAppSelector(
+    (state) => state.teams.redTeam.faultButtonDisabled
+  );
+  const blueButtonDisabled = useAppSelector((state) => state.teams.blueTeam.faultButtonDisabled);
 
   return (
     <View style={styles.missedButtonContainer}>
-      <Pressable
-        onPress={addTeamFault.bind(
-          this,
-          teamType,
-        )}
-      >
-        <View style={styles.missedButton}>
-          <Missed missedType="GAME" height={150} width={150} />
-        </View>
-      </Pressable>
+      {teamType === 'RED' && !redButtonDisabled && (
+        <Pressable onPress={addTeamFault.bind(this, teamType)}>
+          <View style={styles.missedButton}>
+            <Missed missedType="GAME" height={150} width={150} />
+          </View>
+        </Pressable>
+      )}
+      {teamType === 'BLUE' && !blueButtonDisabled && (
+        <Pressable onPress={addTeamFault.bind(this, teamType)}>
+          <View style={styles.missedButton}>
+            <Missed missedType="GAME" height={150} width={150} />
+          </View>
+        </Pressable>
+      )}
     </View>
   );
 };

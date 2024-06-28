@@ -11,7 +11,6 @@ const initialState: IGlobal = {
   },
   gameProgress: 'INIT',
   sessionActive: false,
-  introMusic: false,
   questions: [],
 };
 
@@ -34,15 +33,11 @@ const globalStateSlice = createSlice({
     startGame: (state, action: PayloadAction<IQuestion[]>) => {
       state.questions = action.payload;
     },
-    introMusicFunc: (state, action: PayloadAction<boolean>) => {
-      state.introMusic = action.payload;
-    },
   },
 });
 
 export const {
   setIpAddress,
-  introMusicFunc,
   connected,
   updateGameProgress,
   updateSession,

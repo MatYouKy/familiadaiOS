@@ -14,7 +14,8 @@ const initialState: IBoard = {
   roundNumber: 0,
   showNextBattleButton: false,
   showNextRoundButton: false,
-  showEndGameButton: false
+  showEndGameButton: false,
+  introMusic: false,
 };
 
 const gameSlice = createSlice({
@@ -45,6 +46,9 @@ const gameSlice = createSlice({
     initialStateFunc: () => {
       return initialState;
     },
+    introMusicFunc: (state, action: PayloadAction<boolean>) => {
+      state.introMusic = action.payload;
+    },
   },
 });
 
@@ -57,6 +61,7 @@ export const {
   showNextBattleButtonFunc,
   showNextRoundButtonFunc,
   showEndGameButtonFunc,
+  introMusicFunc,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

@@ -1,9 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { FC, useState } from 'react';
 import { Button, Modal, StyleSheet, Text, TextInput, View } from 'react-native';
 import { colorBase } from '../../../../colors/colorBase';
 import { TeamType } from '../../../../types/game.type';
 import { useAppDispatch } from '../../../../store/hooks';
-import { changeBlueTeamName, changeRedTeamName } from '../../../../store/slices/teamsState';
+import {
+  changeBlueTeamName,
+  changeRedTeamName,
+} from '../../../../store/slices/teamsState';
 
 interface INameModal {
   isOpen: boolean;
@@ -46,6 +50,13 @@ export const NameModal: FC<INameModal> = ({
 
     closeModal(false);
   };
+
+  const handleKeyPress = (e: any) => {
+    if (e.nativeEvent.key === 'Enter') {
+      changeName();
+    }
+  };
+
   return (
     <Modal visible={isOpen} animationType="fade">
       <View style={styles.modalContainer}>
@@ -60,6 +71,8 @@ export const NameModal: FC<INameModal> = ({
             style={styles.inputForm}
             value={teamName}
             onChangeText={handleChangeName}
+            onSubmitEditing={changeName}
+            onKeyPress={handleKeyPress}
           ></TextInput>
           <View
             style={{

@@ -1,26 +1,31 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { IWebSocketMessage } from '../types/game.type';
 
 function useWebSocket(url: string) {
-  const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [message, setMessage] = useState<any>(null);
+  // const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [message, setMessage] = useState<IWebSocketMessage['payload'] | null>(null);
   const [status, setStatus] = useState<'connecting' | 'open' | 'closed' | 'error'>(
     'connecting'
   );
+  const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
     if (!url) return;
 
     const ws = new WebSocket(url);
+    socketRef.current = ws;
+    // setSocket(ws);
 
     ws.onopen = () => {
       setStatus('open');
+      ws.send(JSON.stringify({ type: 'connect', payload: 'tablet' }));
     };
 
     ws.onmessage = (event) => {
       try {
         const parsedData = JSON.parse(event.data);
-        setMessage(parsedData); // Zamiast dodawać do tablicy, nadpisujemy poprzednią wiadomość
+        setMessage(parsedData);
       } catch (error) {
         console.error('Error parsing received data:', error);
       }
@@ -30,29 +35,22 @@ function useWebSocket(url: string) {
       setStatus('closed');
     };
 
-    ws.onerror = (error) => {
-      console.error('WebSocket error:', error);
+    ws.onerror = () => {
       setStatus('error');
     };
-
-    setSocket(ws);
 
     return () => {
       ws.close();
     };
   }, [url]);
 
-  const sendMessage = useCallback(
-    (message: any) => {
-      if (socket && socket.readyState === WebSocket.OPEN) {
-        const messageString = JSON.stringify(message);
-        socket.send(messageString);
-      } else {
-        console.error('WebSocket is not open. Ready state:', socket?.readyState);
-      }
-    },
-    [socket]
-  );
+  const sendMessage = useCallback((message: any) => {
+    const ws = socketRef.current;
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      const messageString = JSON.stringify(message);
+      ws.send(messageString);
+    }
+  }, []);
 
   return { message, sendMessage, status };
 }
