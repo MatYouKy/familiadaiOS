@@ -51,6 +51,8 @@ const useBattleLogic = () => {
       } else if (blueTeam.fault.length === 1 && redTeam.fault.length === 1) {
         dispatch(updateGameStatus('BOARD-BLOCKED'));
       } else if (anyAnswerVisible) {
+
+
         if (blueTeam.fault.length || redTeam.fault.length) {
           dispatch(redFaultButtonDisabledFunc(true));
           dispatch(blueFaultButtonDisabledFunc(true));
@@ -59,8 +61,10 @@ const useBattleLogic = () => {
             dispatch(updateGameStatus('GAME'));
             if (blueTeam.fault.length) {
               dispatch(redTeamActive(true));
-            } else {
+              dispatch(clearFaultFunc());
+            } else if (redTeam.fault.length) {
               dispatch(blueTeamActive(true));
+              dispatch(clearFaultFunc());
             }
             dispatch(clearFaultFunc());
             dispatch(redFaultButtonDisabledFunc(false));

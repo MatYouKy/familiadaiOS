@@ -1,0 +1,453 @@
+{
+  "competitions": [
+    {
+      "competitionTitle": "Testowy zestaw pytań nr 1",
+      "id": "24.06.2024",
+      "eventDate": "24-07-2024",
+      "questions": [
+        {
+          "id": "24.06.2024-1",
+          "question": "Jakie miasto jest stolicą Francji?",
+          "multiplier": 1,
+          "answers": [
+            {
+              "id": "1",
+              "text": "Paryż",
+              "score": 29
+            },
+            {
+              "id": "2",
+              "text": "Londyn",
+              "score": 20
+            },
+            {
+              "id": "3",
+              "text": "Rzym",
+              "score": 15
+            },
+            {
+              "id": "4",
+              "text": "Warszawa",
+              "score": 10
+            },
+            {
+              "id": "5",
+              "text": "Olsztyn",
+              "score": 3
+            },
+            {
+              "id": "6",
+              "text": "Nidzica",
+              "score": 2
+            }
+          ]
+        },
+        {
+          "id": "24.06.2024-2",
+          "question": "Który element ma symbol 'O'?",
+          "multiplier": 1,
+          "answers": [
+            {
+              "id": "4",
+              "text": "Złoto",
+              "score": 30
+            },
+            {
+              "id": "5",
+              "text": "Ksygen",
+              "score": 23
+            },
+            {
+              "id": "6",
+              "text": "Osm",
+              "score": 20
+            },
+            {
+              "id": "7",
+              "text": "Tlen",
+              "score": 17
+            },
+            {
+              "id": "8",
+              "text": "Azot",
+              "score": 12
+            },
+            {
+              "id": "9",
+              "text": "Srebro",
+              "score": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "competitionTitle": "PYTANIA Dla Tymbark 08.06.2024",
+      "id": "08.06.2024",
+      "eventDate": "08-06-2024",
+      "questions": [
+        {
+          "id": "08.06.2024-1",
+          "question": "Wymień Obszary produkcyjne w Zakładzie",
+          "multiplier": 1,
+          "answers": [
+            {
+              "id": "08.06.2024-A-1",
+              "text": "Przetwórstwo (Aseptyka i Koncentraty)",
+              "score": 23
+            },
+            {
+              "id": "08.06.2024-A-2",
+              "text": "Szkło i Kartony",
+              "score": 19
+            },
+            {
+              "id": "08.06.2024-A-3",
+              "text": "Butelki aseptyczne",
+              "score": 15
+            },
+            {
+              "id": "08.06.2024-A-4",
+              "text": "musy",
+              "score": 10
+            },
+            {
+              "id": "08.06.2024-A-5",
+              "text": "miksy",
+              "score": 7
+            },
+            {
+              "id": "08.06.2024-A-6",
+              "text": "eksporty",
+              "score": 3
+            }
+          ]
+        },
+        {
+          "id": "08.06.2024-2",
+          "question": "Więcej niż jedno zwierze?",
+          "multiplier": 2,
+          "answers": [
+            {
+              "id": "08.06.2024-A-7",
+              "text": "Lama",
+              "score": 35
+            },
+            {
+              "id": "08.06.2024-A-8",
+              "text": "Owca",
+              "score": 23
+            },
+            {
+              "id": "08.06.2024-A-9",
+              "text": "stado",
+              "score": 19
+            },
+            {
+              "id": "08.06.2024-A-10",
+              "text": "wataha",
+              "score": 11
+            },
+            {
+              "id": "08.06.2024-A-11",
+              "text": "ławica",
+              "score": 10
+            },
+            {
+              "id": "08.06.2024-A-12",
+              "text": "sfora",
+              "score": 3
+            }
+          ]
+        },
+        {
+          "id": "08.06.2024-3",
+          "question": "Jakie polskie marki soków i napojów produkujemy w Zakładzie Tymbark w Olsztynku?",
+          "multiplier": 1,
+          "answers": [
+            {
+              "id": "08.06.2024-A-13",
+              "text": "Tarczyn",
+              "score": 29
+            },
+            {
+              "id": "08.06.2024-A-14",
+              "text": "tymbark",
+              "score": 20
+            },
+            {
+              "id": "08.06.2024-A-15",
+              "text": "kubuś",
+              "score": 15
+            },
+            {
+              "id": "08.06.2024-A-16",
+              "text": "caprio",
+              "score": 10
+            },
+            {
+              "id": "08.06.2024-A-17",
+              "text": "dr witt",
+              "score": 3
+            }
+          ]
+        },
+        {
+          "id": "08.06.2024-4",
+          "question": "W jakich opakowaniach produkujemy nasze produkty?",
+          "multiplier": 1,
+          "answers": [
+            {
+              "id": "08.06.2024-A-13",
+              "text": "butelki PET",
+              "score": 29
+            },
+            {
+              "id": "08.06.2024-A-14",
+              "text": "pouch/saszetki",
+              "score": 20
+            },
+            {
+              "id": "08.06.2024-A-15",
+              "text": "butelki szklane",
+              "score": 15
+            },
+            {
+              "id": "08.06.2024-A-16",
+              "text": "kartony",
+              "score": 10
+            }
+          ]
+        },
+        {
+          "id": "08.06.2024-5",
+          "question": "Co może się kojarzyć z czarownicami",
+          "multiplier": 1,
+          "answers": [
+            {
+              "id": "08.06.2024-A-13",
+              "text": "miotła",
+              "score": 29
+            },
+            {
+              "id": "08.06.2024-A-14",
+              "text": "magia",
+              "score": 20
+            },
+            {
+              "id": "08.06.2024-A-15",
+              "text": "czarny kot",
+              "score": 15
+            }
+          ]
+        },
+        {
+          "id": "08.06.2024-6",
+          "question": "rodzaj statku",
+          "multiplier": 1,
+          "answers": [
+            {
+              "id": "08.06.2024-A-13",
+              "text": "kosmiczny",
+              "score": 29
+            },
+            {
+              "id": "08.06.2024-A-14",
+              "text": "pasażerski",
+              "score": 20
+            },
+            {
+              "id": "08.06.2024-A-15",
+              "text": "powietrzny",
+              "score": 15
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "competitionTitle": "Standardowe Pytania Weselne",
+      "id": "01.06.2024",
+      "eventDate": "01-06-2024",
+      "questions": [
+        {
+          "id": "01.06.2024-1",
+          "question": "Alkohol bez litery 'W' w nazwie",
+          "multiplier": 1,
+          "answers": [
+            {
+              "id": "01.06.2024-A-1",
+              "text": "BIMBER",
+              "score": 29
+            },
+            {
+              "id": "01.06.2024-A-2",
+              "text": "SZAMPAN",
+              "score": 20
+            },
+            {
+              "id": "01.06.2024-A-3",
+              "text": "TEQUILA",
+              "score": 15
+            },
+            {
+              "id": "01.06.2024-A-4",
+              "text": "RUM",
+              "score": 10
+            },
+            {
+              "id": "01.06.2024-A-5",
+              "text": "GIN",
+              "score": 3
+            },
+            {
+              "id": "01.06.2024-A-6",
+              "text": "LIKIER",
+              "score": 2
+            }
+          ]
+        },
+        {
+          "id": "01.06.2024-2",
+          "question": "Więcej niż jedno zwierzę?",
+          "multiplier": 1,
+          "answers": [
+            {
+              "id": "01.06.2024-B-1",
+              "text": "TAŃCZĄ",
+              "score": 29
+            },
+            {
+              "id": "01.06.2024-B-2",
+              "text": "PIJĄ",
+              "score": 20
+            },
+            {
+              "id": "01.06.2024-B-3",
+              "text": "JEDZĄ",
+              "score": 15
+            },
+            {
+              "id": "01.06.2024-B-4",
+              "text": "GŁOŚNO ŚPIEWAJĄ",
+              "score": 10
+            },
+            {
+              "id": "01.06.2024-B-5",
+              "text": "ROBIĄ ZDJĘCIA",
+              "score": 3
+            },
+            {
+              "id": "01.06.2024-B-6",
+              "text": "OBGADUJĄ",
+              "score": 2
+            }
+          ]
+        },
+        {
+          "id": "01.06.2024-3",
+          "question": "Imię męskie bez litery 'A'",
+          "multiplier": 1,
+          "answers": [
+            {
+              "id": "01.06.2024-C-1",
+              "text": "HENRYK",
+              "score": 29
+            },
+            {
+              "id": "01.06.2024-C-2",
+              "text": "PIOTR",
+              "score": 20
+            },
+            {
+              "id": "01.06.2024-C-3",
+              "text": "NORBERT",
+              "score": 15
+            },
+            {
+              "id": "01.06.2024-C-4",
+              "text": "HUBERT",
+              "score": 10
+            },
+            {
+              "id": "01.06.2024-C-5",
+              "text": "GRZEGORZ",
+              "score": 3
+            }
+          ]
+        },
+        {
+          "id": "01.06.2024-4",
+          "question": "Wymień najważniejsze momenty wesela",
+          "multiplier": 1,
+          "answers": [
+            {
+              "id": "01.06.2024-D-1",
+              "text": "OCZEPINY",
+              "score": 29
+            },
+            {
+              "id": "01.06.2024-D-2",
+              "text": "PODZIĘKOWANIA",
+              "score": 20
+            },
+            {
+              "id": "01.06.2024-D-3",
+              "text": "PIERWSZY TANIEC",
+              "score": 15
+            },
+            {
+              "id": "01.06.2024-D-4",
+              "text": "TORT",
+              "score": 10
+            }
+          ]
+        },
+        {
+          "id": "01.06.2024-5",
+          "question": "najważniejsi usługodawcy na weselu",
+          "multiplier": 1,
+          "answers": [
+            {
+              "id": "01.06.2024-E-1",
+              "text": "ER - WIĘCEJ NIŻ WODZIREJE!",
+              "score": 29
+            },
+            {
+              "id": "01.06.2024-E-2",
+              "text": "KAMERZYŚCI",
+              "score": 20
+            },
+            {
+              "id": "01.06.2024-E-3",
+              "text": "FOTOGRAF",
+              "score": 15
+            }
+          ]
+        },
+        {
+          "id": "01.06.2024-6",
+          "question": "Czego można być świadkiem?",
+          "multiplier": 1,
+          "answers": [
+            {
+              "id": "01.06.2024-F-1",
+              "text": "PAŃSTWA MŁODYCH",
+              "score": 29
+            },
+            {
+              "id": "01.06.2024-F-2",
+              "text": "KORONNYM",
+              "score": 20
+            },
+            {
+              "id": "01.06.2024-F-3",
+              "text": "JECHOWY",
+              "score": 15
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

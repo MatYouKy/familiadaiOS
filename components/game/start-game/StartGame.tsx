@@ -5,10 +5,11 @@ import { useAppDispatch } from '../../../store/hooks';
 import { colorBase } from '../../../colors/colorBase';
 import { updateGameProgress } from '../../../store/slices/globalStateReducer';
 import { introMusicFunc } from '../../../store/slices/gameState';
+import { changeBlueTeamName, changeRedTeamName, startGameTeam } from '../../../store/slices/teamsState';
 
 export const StartGame = () => {
   const dispatch = useAppDispatch();
-  const [timeLeft, setTimeLeft] = useState<number>(19);
+  const [timeLeft, setTimeLeft] = useState<number>(20);
   const [countdownStarted, setCountdownStarted] = useState<boolean>(false);
 
   useEffect(() => {
@@ -24,8 +25,12 @@ export const StartGame = () => {
   }, [countdownStarted, timeLeft, dispatch]);
 
   const handleStartGame = () => {
+    dispatch(changeBlueTeamName('Niebiescy'));
+    dispatch(changeRedTeamName('Czerwoni'));
+    dispatch(startGameTeam());
     setCountdownStarted(true);
     dispatch(introMusicFunc(true));
+
   };
   const handleBack = () => {
     dispatch(updateGameProgress('INIT'));

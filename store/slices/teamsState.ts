@@ -94,8 +94,9 @@ const teams = createSlice({
       state.redTeam.isActive = false;
       state.blueTeam.isActive = false;
     },
-    startGameTeam: () => {
-      return initialState;
+    startGameTeam: (state) => {
+      state.blueTeam = initialState.blueTeam,
+      state.redTeam = initialState.redTeam
     },
 
     resetTeams: (state) => {
