@@ -1,0 +1,6 @@
+module Pods_familiadaiOS {
+  umbrella header "Pods-familiadaiOS-umbrella.h"
+
+  export *
+  module * { export * }
+}
