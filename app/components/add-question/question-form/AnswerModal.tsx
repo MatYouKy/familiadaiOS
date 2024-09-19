@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { Modal, View, StyleSheet, TextInput } from 'react-native';
 import { colorBase } from '@__colors/colorBase';
-import { Input } from '@__components/app/menage-questions/Input';
+import { Input } from 'app/menage-questions/Input';
 import { ActionButton, Divider } from '@__components/ui';
 import { IModalAction } from '@__types/ui.type';
 import { FormAnswerType } from './QuestionFormModal';

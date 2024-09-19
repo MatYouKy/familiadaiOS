@@ -5,7 +5,7 @@ import { View, Text, StyleSheet, FlatList, TextInput } from 'react-native';
 import { FormAnswerType } from './QuestionFormModal';
 import { IAnswer } from '@__types/game.type';
 import { ActionBar } from '@__components/actions/ActionBar';
-import { CustomModal } from '@__components/app/components/game/board/modal/CustomModal';
+import { CustomModal } from 'app/components/game/board/modal/CustomModal';
 
 interface IAddAnswersList {
   answers: IAnswer[];

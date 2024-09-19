@@ -1,7 +1,7 @@
 import React, { useLayoutEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { colorBase } from '@__colors/colorBase';
-import { InitializeConnect } from '../connect/initialize-connect/InitializeConnect';
+import { InitializeConnect } from '../components/connect/initialize-connect/InitializeConnect';
 import { useAppSelector } from '@__store/hooks';
 import { Game } from './components/game/Game';
 import Snackbar from '@__components/ui/snackbar/Snackbar';
