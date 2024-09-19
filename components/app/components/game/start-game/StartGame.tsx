@@ -8,7 +8,7 @@ import { ActionButton } from '@__components/ui';
 
 export const StartGame = () => {
   const dispatch = useAppDispatch();
-  const [timeLeft, setTimeLeft] = useState<number>(19);
+  const [timeLeft, setTimeLeft] = useState<number>(1);
   const [countdownStarted, setCountdownStarted] = useState<boolean>(false);
 
   useEffect(() => {
@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   actionButtonWrapper: {
+    alignItems: 'center',
     width: 500,
     height: 500,
     justifyContent: 'space-between',

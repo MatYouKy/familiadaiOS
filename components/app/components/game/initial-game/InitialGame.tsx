@@ -4,10 +4,10 @@ import { colorBase } from '@__colors/colorBase';
 import { ICompetition } from '@__types/game.type';
 import { Divider, ActionButton } from '@__components/ui';
 import { GameList } from './GameList';
-import { MenageCompetitionModal } from '@__components/app/add-competition/MenageCompetitionModal';
 import { uuid } from '@__utils/idGenerator';
 import useFetchData from '@__hooks/useFetchData';
 import { useAppSelector } from '@__store/hooks';
+import { MenageCompetitionModal } from '../../add-competition/MenageCompetitionModal';
 
 const InitialGame = () => {
   const initialCompetition: ICompetition = {

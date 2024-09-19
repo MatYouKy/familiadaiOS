@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { Missed } from '@__ui/Missed/BigMissed';
 import { colorBase } from '@__colors/colorBase';
 import { TeamType } from '@__types/game.type';
-import useAddTeamFault from '@__hooks/useAddTeamFault';
+import useAddTeamFault from '@__app/hooks/useAddTeamFault';
 import { useAppSelector } from '@__store/hooks';
 
 interface IMissedButton {

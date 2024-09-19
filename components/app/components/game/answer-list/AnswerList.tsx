@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { FlatList, StyleSheet, Text, Pressable, View } from 'react-native';
 import { IAnswer } from '@__types/game.type';
 import { colorBase } from '@__colors/colorBase';
-import useAnswerVisibility from '@__hooks/useAnswerVisibility';
+import useAnswerVisibility from '@__app/hooks/useAnswerVisibility';
 
 interface IAnswerList {
   list: IAnswer[];

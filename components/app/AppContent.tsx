@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { colorBase } from '@__colors/colorBase';
 import { InitializeConnect } from '../connect/initialize-connect/InitializeConnect';
 import { useAppSelector } from '@__store/hooks';
-import { Game } from './game/Game';
+import { Game } from './components/game/Game';
 import Snackbar from '@__components/ui/snackbar/Snackbar';
 import { LoaderModal } from '@__components/ui/loader/Loader';
 import useIpConnection from '@__hooks/useIpConnection';

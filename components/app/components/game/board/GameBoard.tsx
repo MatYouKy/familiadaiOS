@@ -31,6 +31,8 @@ export const GameBoard = ({ handleRefresh }: { handleRefresh: () => void }) => {
     roundNumber,
   } = useAppSelector((state) => state.gameState);
 
+  const { gameProgress } =  useAppSelector((state) => state.globalState)
+
   const [openBackModal, setOpenBackModal] = useState(false);
   const [openSwapModal, setOpenSwapModal] = useState(false);
 
@@ -136,7 +138,7 @@ export const GameBoard = ({ handleRefresh }: { handleRefresh: () => void }) => {
               optionalText="zmiana stron"
             />
           </View>
-          <View style={styles.undoRendoActionContainer}>
+          {gameProgress && <View style={styles.undoRendoActionContainer}>
             <IconButton
               onPress={undoAction}
               action="UNDO"
@@ -153,7 +155,7 @@ export const GameBoard = ({ handleRefresh }: { handleRefresh: () => void }) => {
               optionalText="naprzód"
               // disabled={!canRedo}
             />
-          </View>
+          </View>}
           <View style={styles.button}>
             <IconButton
               onPress={handleRefresh}

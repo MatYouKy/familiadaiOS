@@ -9,9 +9,9 @@ import { startGameTeam } from '@__store/slices/teamsState';
 import { ActionBar } from '@__components/actions/ActionBar';
 import { IconButton } from '@__components/ui/actions/iconButtons/IconButton';
 import useFetchData from '@__hooks/useFetchData';
-import { MenageCompetitionModal } from '@__components/app/add-competition/MenageCompetitionModal';
 import { CustomModal } from '../board/modal/CustomModal';
 import { startCompetitionFunc } from '@__store/slices/gameState';
+import { MenageCompetitionModal } from '../../add-competition/MenageCompetitionModal';
 
 interface ICompetitionItem {
   competition: ICompetition;

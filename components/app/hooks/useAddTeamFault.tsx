@@ -10,9 +10,9 @@ import {
   redTeamExtraGame,
   updateBlueTeamChance,
   updateRedTeamChance,
-} from '../store/slices/teamsState';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { showNextBattleButtonFunc, updateGameStatus } from '../store/slices/gameState';
+} from '@__store/slices/teamsState';
+import { useAppDispatch, useAppSelector } from '@__store/hooks';
+import { showNextBattleButtonFunc, updateGameStatus } from '@__store/slices/gameState';
 import useAnswerVisibilityChecks from './useAnswerVisibilityChecks';
 
 const useAddTeamFault = () => {

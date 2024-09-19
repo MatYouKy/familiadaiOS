@@ -38,18 +38,18 @@ const useBattleLogic = () => {
       if (firstAnswerVisibleAndOthersNot) {
         if (blueTeam.fault.length && !redTeam.isActive) {
           // const timeout = setTimeout(() => {
-            dispatch(redTeamActive(true));
-            dispatch(resetStations());
-            dispatch(updateGameStatus('GAME'));
-            dispatch(clearFaultFunc());
+          dispatch(redTeamActive(true));
+          dispatch(resetStations());
+          dispatch(updateGameStatus('GAME'));
+          dispatch(clearFaultFunc());
           // }, 3000);
           // return () => clearTimeout(timeout);
         } else if (redTeam.fault.length && !blueTeam.isActive) {
           // const timeout = setTimeout(() => {
-            dispatch(updateGameStatus('GAME'));
-            dispatch(blueTeamActive(true));
-            dispatch(clearFaultFunc());
-            dispatch(resetStations());
+          dispatch(updateGameStatus('GAME'));
+          dispatch(blueTeamActive(true));
+          dispatch(clearFaultFunc());
+          dispatch(resetStations());
           // }, 3000);
           // return () => clearTimeout(timeout);
         } else if (!blueTeam.isActive && !redTeam.isActive) {
@@ -59,26 +59,24 @@ const useBattleLogic = () => {
       } else if (blueTeam.fault.length === 1 && redTeam.fault.length === 1) {
         dispatch(updateGameStatus('BOARD-BLOCKED'));
       } else if (anyAnswerVisible) {
-
-
         if (blueTeam.fault.length || redTeam.fault.length) {
           dispatch(redFaultButtonDisabledFunc(true));
           dispatch(blueFaultButtonDisabledFunc(true));
           // dispatch(updateGameStatus('BOARD-BLOCKED'));
           // const timeout = setTimeout(() => {
-            dispatch(updateGameStatus('GAME'));
-            if (blueTeam.fault.length) {
-              dispatch(redTeamActive(true));
-              dispatch(clearFaultFunc());
-            } else if (redTeam.fault.length) {
-              dispatch(blueTeamActive(true));
-              dispatch(clearFaultFunc());
-            }
-            dispatch(resetStations());
+          dispatch(updateGameStatus('GAME'));
+          if (blueTeam.fault.length) {
+            dispatch(redTeamActive(true));
             dispatch(clearFaultFunc());
-            dispatch(redFaultButtonDisabledFunc(false));
-            dispatch(blueFaultButtonDisabledFunc(false));
-            dispatch(updateGameStatus('GAME'));
+          } else if (redTeam.fault.length) {
+            dispatch(blueTeamActive(true));
+            dispatch(clearFaultFunc());
+          }
+          dispatch(resetStations());
+          dispatch(clearFaultFunc());
+          dispatch(redFaultButtonDisabledFunc(false));
+          dispatch(blueFaultButtonDisabledFunc(false));
+          dispatch(updateGameStatus('GAME'));
           // }, 3000);
           // return clearTimeout(timeout);
         } else if (blueTeam.fault.length === 1) {

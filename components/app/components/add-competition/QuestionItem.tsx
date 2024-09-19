@@ -3,12 +3,14 @@ import { Divider } from '@__components/ui';
 import { IQuestion } from '@__types/game.type';
 import React, { FC, useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { QuestionFormModal } from '../add-question/question-form/QuestionFormModal';
+
 import { ActionBar } from '@__components/actions/ActionBar';
 import { useAppDispatch } from '@__store/hooks';
 import { deleteQuestionFromCompetitionFunc } from '@__store/slices/competitionsStateSlice';
-import { CustomModal } from '../game/board/modal/CustomModal';
+
 import { snackbarActionFunc } from '@__store/slices/snackbarSlice';
+import { CustomModal } from '../game/board/modal/CustomModal';
+import { QuestionFormModal } from '../add-question/question-form/QuestionFormModal';
 
 interface IQuestionItem {
   question: IQuestion;

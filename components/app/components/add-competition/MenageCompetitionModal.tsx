@@ -14,8 +14,6 @@ import { colorBase } from '@__colors/colorBase';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { Divider } from '@__ui/divider/Divider';
 import { ActionButton } from '@__components/ui';
-import { Input } from '../menage-questions/Input';
-import { QuestionFormModal } from '../add-question/question-form/QuestionFormModal';
 import { IconButton } from '@__components/ui/actions/iconButtons/IconButton';
 import useFetchData from '@__hooks/useFetchData';
 import { useAppDispatch, useAppSelector } from '@__store/hooks';
@@ -26,6 +24,8 @@ import {
 } from '@__store/slices/competitionsStateSlice';
 import { CompetitionList } from './CompetitionList';
 import { snackbarActionFunc } from '@__store/slices/snackbarSlice';
+import { Input } from '@__components/app/menage-questions/Input';
+import { QuestionFormModal } from '../add-question/question-form/QuestionFormModal';
 
 interface IMenageCompetitionModal {
   addQuestionModal: boolean;
