@@ -24,7 +24,7 @@ import {
 } from '@__store/slices/competitionsStateSlice';
 import { CompetitionList } from './CompetitionList';
 import { snackbarActionFunc } from '@__store/slices/snackbarSlice';
-import { Input } from '@__components/app/menage-questions/Input';
+import { Input } from 'app/menage-questions/Input';
 import { QuestionFormModal } from '../add-question/question-form/QuestionFormModal';
 
 interface IMenageCompetitionModal {
@@ -178,9 +178,7 @@ export const MenageCompetitionModal: FC<IMenageCompetitionModal> = ({
           <Divider fullwidth color="mainGold" />
         </View>
         <View>
-          <CompetitionList
-            handleInputChange={handleInputChange}
-          />
+          <CompetitionList handleInputChange={handleInputChange} />
           {questions.length < 6 && (
             <IconButton
               action="ADD"

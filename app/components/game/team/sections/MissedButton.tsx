@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { Missed } from '@__ui/Missed/BigMissed';
 import { colorBase } from '@__colors/colorBase';
 import { TeamType } from '@__types/game.type';
-import useAddTeamFault from '@__app/hooks/useAddTeamFault';
+import useAddTeamFault from 'app/hooks/useAddTeamFault';
 import { useAppSelector } from '@__store/hooks';
 
 interface IMissedButton {
@@ -15,7 +15,9 @@ export const MissedButton: FC<IMissedButton> = ({ teamType }) => {
   const redButtonDisabled = useAppSelector(
     (state) => state.teams.redTeam.faultButtonDisabled
   );
-  const blueButtonDisabled = useAppSelector((state) => state.teams.blueTeam.faultButtonDisabled);
+  const blueButtonDisabled = useAppSelector(
+    (state) => state.teams.blueTeam.faultButtonDisabled
+  );
 
   return (
     <View style={styles.missedButtonContainer}>

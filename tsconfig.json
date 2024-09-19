@@ -10,39 +10,18 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": "./",
     "paths": {
-      "@__types/*": [
-        "types/*"
-      ],
-      "@__assets/*": [
-        "assets/*"
-      ],
-      "@__colors/*": [
-        "colors/*"
-      ],
-      "@__utils/*": [
-        "utils/*"
-      ],
-      "@__components/*": [
-        "components/*"
-      ],
-      "@__ui/*": [
-        "components/ui/*"
-      ],
-      "@__app/*": [
-        "components/app/*"
-      ],
-      "@__hooks/*": [
-        "hooks/*"
-      ],
-      "@__store/*": [
-        "store/*"
-      ]
+      "@__types/*": ["types/*"],
+      "@__assets/*": ["assets/*"],
+      "@__colors/*": ["colors/*"],
+      "@__utils/*": ["utils/*"],
+      "@__components/*": ["components/*"],
+      "@__ui/*": ["components/ui/*"],
+      "@__app/*": ["app/*"],
+      "@__hooks/*": ["hooks/*"],
+      "@__store/*": ["store/*"]
     }
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx"
-  ],
+  "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "babel.config.js", "metro.config.js"],
   "extends": "expo/tsconfig.base"
 }
