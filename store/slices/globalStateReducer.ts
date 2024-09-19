@@ -1,14 +1,9 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 import { SliceName } from '../enums';
-import { GameProgress, IConnect, IGlobal, IQuestion } from '../../types/game.type';
+import { GameProgress, IGlobal, IQuestion } from '@__types/game.type';
 
 const initialState: IGlobal = {
-  ipAddress: 'http://localhost:3000',
-  connected: {
-    status: 'error',
-    message: 'not connected with other device',
-  },
   gameProgress: 'INIT',
   sessionActive: false,
   questions: [],
@@ -18,12 +13,6 @@ const globalStateSlice = createSlice({
   name: SliceName.GLOBAL_STATE,
   initialState,
   reducers: {
-    setIpAddress: (state, action: PayloadAction<string>) => {
-      state.ipAddress = action.payload;
-    },
-    connected: (state, action: PayloadAction<IConnect>) => {
-      state.connected = action.payload;
-    },
     updateGameProgress: (state, action: PayloadAction<GameProgress>) => {
       state.gameProgress = action.payload;
     },
@@ -36,13 +25,8 @@ const globalStateSlice = createSlice({
   },
 });
 
-export const {
-  setIpAddress,
-  connected,
-  updateGameProgress,
-  updateSession,
-  startGame,
-} = globalStateSlice.actions;
+export const { updateGameProgress, updateSession, startGame } =
+  globalStateSlice.actions;
 
 export const GlobalStateActions = globalStateSlice.actions;
 

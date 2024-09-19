@@ -9,14 +9,15 @@ import {
   blueTeamCollectButton,
   redFaultButtonDisabledFunc,
   blueFaultButtonDisabledFunc,
-} from '../store/slices/teamsState';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
+  resetStations,
+} from '@__store/slices/teamsState';
+import { useAppDispatch, useAppSelector } from '@__store/hooks';
 import useAnswerVisibilityChecks from './useAnswerVisibilityChecks';
 import {
   showEndGameButtonFunc,
   showNextRoundButtonFunc,
   updateGameStatus,
-} from '../store/slices/gameState';
+} from '@__store/slices/gameState';
 
 const useBattleLogic = () => {
   const dispatch = useAppDispatch();
@@ -36,15 +37,22 @@ const useBattleLogic = () => {
     if (gameStatus === 'BATTLE') {
       if (firstAnswerVisibleAndOthersNot) {
         if (blueTeam.fault.length && !redTeam.isActive) {
-          dispatch(updateGameStatus('GAME'));
-          dispatch(redTeamActive(true));
-          dispatch(clearFaultFunc());
+          // const timeout = setTimeout(() => {
+            dispatch(redTeamActive(true));
+            dispatch(resetStations());
+            dispatch(updateGameStatus('GAME'));
+            dispatch(clearFaultFunc());
+          // }, 3000);
+          // return () => clearTimeout(timeout);
         } else if (redTeam.fault.length && !blueTeam.isActive) {
-          dispatch(updateGameStatus('GAME'));
-          dispatch(blueTeamActive(true));
-          dispatch(clearFaultFunc());
+          // const timeout = setTimeout(() => {
+            dispatch(updateGameStatus('GAME'));
+            dispatch(blueTeamActive(true));
+            dispatch(clearFaultFunc());
+            dispatch(resetStations());
+          // }, 3000);
+          // return () => clearTimeout(timeout);
         } else if (!blueTeam.isActive && !redTeam.isActive) {
-          dispatch(updateGameStatus('BOARD-BLOCKED'));
           dispatch(redTeamActiveButton(true));
           dispatch(blueTeamActiveButton(true));
         }
@@ -56,8 +64,8 @@ const useBattleLogic = () => {
         if (blueTeam.fault.length || redTeam.fault.length) {
           dispatch(redFaultButtonDisabledFunc(true));
           dispatch(blueFaultButtonDisabledFunc(true));
-          dispatch(updateGameStatus('BOARD-BLOCKED'));
-          setTimeout(() => {
+          // dispatch(updateGameStatus('BOARD-BLOCKED'));
+          // const timeout = setTimeout(() => {
             dispatch(updateGameStatus('GAME'));
             if (blueTeam.fault.length) {
               dispatch(redTeamActive(true));
@@ -66,17 +74,21 @@ const useBattleLogic = () => {
               dispatch(blueTeamActive(true));
               dispatch(clearFaultFunc());
             }
+            dispatch(resetStations());
             dispatch(clearFaultFunc());
             dispatch(redFaultButtonDisabledFunc(false));
             dispatch(blueFaultButtonDisabledFunc(false));
             dispatch(updateGameStatus('GAME'));
-          }, 5000);
+          // }, 3000);
+          // return clearTimeout(timeout);
         } else if (blueTeam.fault.length === 1) {
           dispatch(redTeamActive(true));
           dispatch(clearFaultFunc());
+          dispatch(resetStations());
         } else if (redTeam.fault.length === 1) {
           dispatch(blueTeamActive(true));
           dispatch(clearFaultFunc());
+          dispatch(resetStations());
         } else if (twoAnswersVisible) {
           dispatch(redTeamActiveButton(true));
           dispatch(blueTeamActiveButton(true));
@@ -85,17 +97,15 @@ const useBattleLogic = () => {
       }
     } else if (gameStatus === 'GAME' && allVisible) {
       if (redTeam.isActive) {
+        dispatch(updateGameStatus('BOARD-BLOCKED'));
         dispatch(redTeamCollectButton(true));
-        dispatch(updateGameStatus('BOARD-BLOCKED'));
         dispatch(blueTeamActiveButton(false));
         dispatch(redTeamActiveButton(false));
-        return;
       } else {
-        dispatch(blueTeamCollectButton(true));
         dispatch(updateGameStatus('BOARD-BLOCKED'));
+        dispatch(blueTeamCollectButton(true));
         dispatch(blueTeamActiveButton(false));
         dispatch(redTeamActiveButton(false));
-        return;
       }
     } else if (gameStatus === 'SUMMARY-GAME') {
       dispatch(redTeamCollectButton(false));

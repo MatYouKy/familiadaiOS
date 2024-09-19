@@ -1,29 +1,25 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { SliceName } from '../enums';
+import { IConnect } from '@__types/game.type';
 
-interface WebSocketState {
-  status: 'connecting' | 'open' | 'closed' | 'error';
-  messages: string[];
-}
-
-const initialState: WebSocketState = {
-  status: 'connecting',
-  messages: [],
+const initialState: IConnect = {
+  status: 'pending',
+  message: 'not connected with other device',
+  ipAddress: 'http://localhost:2020',
 };
 
 const webSocketSlice = createSlice({
   name: SliceName.WEBSOCKET,
   initialState,
   reducers: {
-    connectionStatusUpdated: (state, action: PayloadAction<WebSocketState['status']>) => {
-      state.status = action.payload;
-    },
-    messageReceived: (state, action: PayloadAction<string>) => {
-      state.messages.push(action.payload);
+    connectState: (state, action: PayloadAction<IConnect>) => {
+      state.status = action.payload.status;
+      state.message = action.payload.message;
+      state.ipAddress = action.payload.ipAddress;
     },
   },
 });
 
-export const { connectionStatusUpdated, messageReceived } = webSocketSlice.actions;
+export const { connectState } = webSocketSlice.actions;
 
 export default webSocketSlice.reducer;

@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { SliceName } from '../enums';
-import { GameStatus, IBoard, IQuestion } from '../../types/game.type';
+import { GameStatus, IBoard, IQuestion } from '@__types/game.type';
 
 const initialState: IBoard = {
   score: 0,
@@ -16,6 +16,7 @@ const initialState: IBoard = {
   showNextRoundButton: false,
   showEndGameButton: false,
   introMusic: false,
+  startCompetition: false,
 };
 
 const gameSlice = createSlice({
@@ -49,6 +50,9 @@ const gameSlice = createSlice({
     introMusicFunc: (state, action: PayloadAction<boolean>) => {
       state.introMusic = action.payload;
     },
+    startCompetitionFunc: (state, action: PayloadAction<boolean>) => {
+      state.startCompetition = action.payload;
+    },
   },
 });
 
@@ -62,6 +66,7 @@ export const {
   showNextRoundButtonFunc,
   showEndGameButtonFunc,
   introMusicFunc,
+  startCompetitionFunc,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

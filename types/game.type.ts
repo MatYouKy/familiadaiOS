@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type MultiplierType = 1 | 2 | 3;
+export type SnackbarStatus = 'EDIT' | 'ERROR' | 'SUCCESS' | null;
 export type RoundStatus = number;
 export type TeamType = 'RED' | 'BLUE';
 export type ClientType = 'TABLET' | 'BOARD';
@@ -8,10 +9,24 @@ export type GameStatus =
   | 'GAME'
   | 'SUMMARY-GAME'
   | 'BOARD-BLOCKED'
+  | 'BATTLE-BOARD-BLOCKED'
   | 'EXTRA-GAME'
   | 'NEXT-ROUND'
   | 'END-GAME';
 export type GameProgress = 'INIT' | 'START' | 'QUIZ' | 'END';
+export type ConnectType = 'success' | 'pending' | 'error' | 'close' | null;
+
+export interface ISnackbar {
+  status: SnackbarStatus;
+  message: string;
+  snackbarHideAfter?: number;
+}
+
+export interface IConnect {
+  status: ConnectType;
+  message: string;
+  ipAddress?: string | null;
+}
 
 export interface IGameTeam
   extends Omit<
@@ -28,6 +43,7 @@ export interface IGameBoard {
   gameProgress: GameProgress;
   gameStatus: GameStatus;
   introMusic: boolean;
+  stationActive?: boolean;
 }
 
 export interface IFault {
@@ -37,11 +53,7 @@ export interface IFault {
 export interface IGameTeams {
   redTeam: ITeam;
   blueTeam: ITeam;
-}
-
-export interface IConnect {
-  status: 'error' | 'success';
-  message: string;
+  teamSwap: boolean;
 }
 
 export interface IQuiz {
@@ -62,6 +74,20 @@ export interface IQuestion {
   answers: IAnswer[];
 }
 
+export interface ICompetition {
+  competitionTitle: string;
+  id: string;
+  questions: IQuestion[];
+  eventDate: string;
+}
+
+export interface IManageCompetition {
+  currentCompetitions: ICompetition[];
+  editedCompetition: ICompetition;
+}
+
+export type ItemType = ICompetition | IQuestion | IAnswer;
+
 export interface ITeam {
   teamType: TeamType;
   totalScore: number;
@@ -72,6 +98,7 @@ export interface ITeam {
   faultButtonDisabled: boolean;
   collectButton: boolean;
   activeButton: boolean;
+  stationActive?: boolean;
 }
 
 export interface IGame {
@@ -81,17 +108,10 @@ export interface IGame {
   currentQuestion: IQuestion;
   gameTeams: IGameTeams;
   gameStatus: GameStatus;
-  connected: IConnect;
-  ipAddress: string;
   sessionActive: boolean;
 }
 
-export interface ICompetition {
-  competitionTitle: string;
-  id: string;
-  questions: IQuestion[];
-  eventDate: string;
-}
+
 
 export interface ICompetitions {
   competitions: ICompetition[];
@@ -114,21 +134,27 @@ export type IBoard = Omit<
   showNextRoundButton: boolean;
   showEndGameButton: boolean;
   introMusic: boolean;
+  startCompetition: boolean;
 };
+
+export interface IPulpit {
+  redButton: boolean;
+  blueButton: boolean;
+}
+
 
 export type WebSocketMessageType =
   | 'connect'
   | 'red-team'
   | 'blue-team'
   | 'board'
+  | 'pulpit'
   | 'ping'
   | 'pong';
 
-export type ConnectType = 'error' | 'success';
-
 export interface IWebSocketMessage {
   type: WebSocketMessageType;
-  payload: IGameTeam | IGameBoard | ConnectType | WebsocketPingPong;
+  payload: IGameTeam | IGameBoard | ConnectType | WebsocketPingPong | WebsocketPulpit;
 }
 
 export interface WebsocketBoard {
@@ -143,3 +169,8 @@ export interface WebsocketPingPong {
   type: WebSocketMessageType;
   payload: any;
 }
+export interface WebsocketPulpit {
+  type: WebSocketMessageType;
+  payload: IPulpit;
+}
+

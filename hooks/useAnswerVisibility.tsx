@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { updateCurrentQuestion, updateGameScore, updateGameStatus } from '../store/slices/gameState';
+import { useAppDispatch, useAppSelector } from '@__store/hooks';
+import { updateCurrentQuestion, updateGameScore, updateGameStatus } from '@__store/slices/gameState';
 import useBattleLogic from './useBattleLogic';
-import { blueTeamCollectButton, redTeamCollectButton } from '../store/slices/teamsState';
+import { blueTeamCollectButton, redTeamCollectButton } from '@__store/slices/teamsState';
 
 const useAnswerVisibility = () => {
   const dispatch = useAppDispatch();

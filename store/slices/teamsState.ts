@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { SliceName } from '../enums';
-import { IFault, IGameTeams, ITeam } from '../../types/game.type';
+import { IFault, IGameTeams, ITeam } from '@__types/game.type';
 
 const initialState: IGameTeams = {
   redTeam: {
@@ -12,7 +12,8 @@ const initialState: IGameTeams = {
     extraGame: false,
     faultButtonDisabled: false,
     activeButton: false,
-    collectButton: false
+    collectButton: false,
+    stationActive: false
   },
   blueTeam: {
     name: 'Niebiescy',
@@ -23,8 +24,10 @@ const initialState: IGameTeams = {
     extraGame: false,
     faultButtonDisabled: false,
     activeButton: false,
-    collectButton: false
+    collectButton: false,
+    stationActive: false
   },
+  teamSwap: false
 };
 
 const teams = createSlice({
@@ -84,6 +87,16 @@ const teams = createSlice({
     blueTeamCollectButton: (state, action: PayloadAction<boolean>) => {
       state.blueTeam.collectButton = action.payload;
     },
+    stationRedActive: (state, action: PayloadAction<boolean>) => {
+      state.redTeam.stationActive = action.payload;
+    },
+    stationBlueActive: (state, action: PayloadAction<boolean>) => {
+      state.blueTeam.stationActive = action.payload;
+    },
+    resetStations: (state) => {
+      state.redTeam.stationActive = false;
+      state.blueTeam.stationActive = false;
+    },
 
     clearFaultFunc: (state) => {
       state.blueTeam.fault = [];
@@ -98,17 +111,20 @@ const teams = createSlice({
       state.blueTeam = initialState.blueTeam,
       state.redTeam = initialState.redTeam
     },
+    swapTeamFunc: (state) => {
+      state.teamSwap = !state.teamSwap;
+    },
 
     resetTeams: (state) => {
       state.redTeam = {
         ...initialState.redTeam,
         totalScore: state.redTeam.totalScore,
-        name: state.redTeam.name
+        name: state.redTeam.name,
       };
       state.blueTeam = {
         ...initialState.blueTeam,
         totalScore: state.blueTeam.totalScore,
-        name: state.blueTeam.name
+        name: state.blueTeam.name,
       };
     },
   },
@@ -135,6 +151,10 @@ export const {
   blueTeamActiveButton,
   redTeamCollectButton,
   blueTeamCollectButton,
+  stationRedActive,
+  stationBlueActive,
+  swapTeamFunc,
+  resetStations,
 } = teams.actions;
 
 export const TeamActions = teams.actions;

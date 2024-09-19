@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { IAnswer } from '../types/game.type';
+import { IAnswer } from '@__types/game.type';
 
 const useAnswerVisibilityChecks = (answers: IAnswer[]) => {
   const [onlyOneVisible, setOnlyOneVisible] = useState(false);

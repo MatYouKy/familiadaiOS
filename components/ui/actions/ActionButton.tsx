@@ -1,13 +1,16 @@
 import React, { FC } from 'react';
-import { Pressable, StyleSheet, Text, View, ViewStyle, TextStyle } from 'react-native';
-import { ColorAliases, colorMap } from '../../../colors/colorBase';
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+  TextStyle,
+  PressableProps,
+} from 'react-native';
+import { ColorAliases, colorMap } from '@__colors/colorBase';
 
-export type FontSizeAliases =
-  | 'x-small'
-  | 'small'
-  | 'medium'
-  | 'large'
-  | 'x-large';
+export type FontSizeAliases = 'x-small' | 'small' | 'medium' | 'large' | 'x-large';
 
 const fontSizeMap: Record<FontSizeAliases, number> = {
   'x-small': 12,
@@ -18,7 +21,7 @@ const fontSizeMap: Record<FontSizeAliases, number> = {
 };
 
 interface IActionButton {
-  onPress: () => void;
+  onPress: PressableProps['onPress'];
   title: string;
   variant?: 'OUTLINED' | 'SMALL' | 'DEFAULT';
   backgroundColor?: ColorAliases;
@@ -27,33 +30,41 @@ interface IActionButton {
   fullwidth?: boolean;
   buttonStyle?: ViewStyle;
   textStyle?: TextStyle;
+  disabled?: boolean;
 }
 
 export const ActionButton: FC<IActionButton> = ({
   onPress,
   title,
   backgroundColor = 'white',
-  color = 'black',
+  color = "backgroundMain",
   // variant = 'DEFAULT',
   size = 'medium',
   fullwidth = false,
   buttonStyle,
   textStyle,
+  disabled = false,
 }) => {
   return (
-    <Pressable onPress={onPress}>
+    <Pressable
+      onPress={disabled ? undefined : onPress}
+      style={[fullwidth && { width: '100%' }]}
+    >
       <View
         style={[
           styles.buttonContainer,
-          { backgroundColor: colorMap[backgroundColor] },
-          fullwidth && { width: '100%' },
+          { backgroundColor: disabled ? colorMap[backgroundColor] : colorMap[backgroundColor] },
           buttonStyle as ViewStyle,
+          disabled && styles.disabledButton,
         ]}
       >
         <Text
           style={[
             styles.buttonText,
-            { color: colorMap[color], fontSize: fontSizeMap[size] },
+            {
+              color: disabled ? colorMap[color] : colorMap[color],
+              fontSize: fontSizeMap[size],
+            },
             {
               paddingHorizontal: 2 * fontSizeMap[size],
               paddingVertical: fontSizeMap[size],
@@ -70,12 +81,16 @@ export const ActionButton: FC<IActionButton> = ({
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    marginHorizontal: 'auto',
-    borderRadius: 36,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   buttonText: {
-    textTransform: 'uppercase',
-    letterSpacing: 4,
-    fontWeight: '700',
+    fontWeight: 'bold',
+    letterSpacing: 1,
+    textTransform: 'capitalize'
+  },
+  disabledButton: {
+    opacity: 0.2,
   },
 });

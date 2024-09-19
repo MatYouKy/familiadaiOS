@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ColorAliases, colorBase, colorMap } from '../../../colors/colorBase';
+import { ColorAliases, colorBase, colorMap } from '@__colors/colorBase';
 
 interface IDivider {
   fullwidth?: boolean;
@@ -25,12 +25,11 @@ export const Divider: FC<IDivider> = ({ fullwidth = false, height = 1, color = '
 
 const styles = StyleSheet.create({
   divider: {
-    flex: 1,
+    marginVertical: 24,
     alignItems: 'center',
   },
   dividerContent: {
     width: '80%',
-    borderRadius: 160,
     borderColor: colorBase.mainGold,
   },
 });

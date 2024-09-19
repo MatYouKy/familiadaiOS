@@ -1,25 +1,50 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState, useCallback, useRef } from 'react';
-import { IWebSocketMessage } from '../types/game.type';
+import { useAppDispatch } from '@__store/hooks';
+import { snackbarActionFunc } from '@__store/slices/snackbarSlice';
+import { IConnect, IWebSocketMessage } from '@__types/game.type';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 function useWebSocket(url: string) {
-  // const [socket, setSocket] = useState<WebSocket | null>(null);
+  const dispatch = useAppDispatch();
   const [message, setMessage] = useState<IWebSocketMessage['payload'] | null>(null);
-  const [status, setStatus] = useState<'connecting' | 'open' | 'closed' | 'error'>(
-    'connecting'
-  );
+  const [status, setStatus] = useState<IConnect['status']>(null);
   const socketRef = useRef<WebSocket | null>(null);
+  const reconnectInterval = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    if (!url) return;
+  const connectWebSocket = useCallback(() => {
+    // Sprawdzamy, czy istnieje aktywne połączenie WebSocket
+    if (
+      socketRef.current &&
+      (socketRef.current.readyState === WebSocket.OPEN ||
+        socketRef.current.readyState === WebSocket.CONNECTING)
+    ) {
+      console.log('WebSocket is already connected or connecting.');
+      return;
+    }
+
+    console.log('Connecting to WebSocket at:', url);
 
     const ws = new WebSocket(url);
     socketRef.current = ws;
-    // setSocket(ws);
 
     ws.onopen = () => {
-      setStatus('open');
-      ws.send(JSON.stringify({ type: 'connect', payload: 'tablet' }));
+      console.log('WebSocket connected.');
+      setStatus('success');
+
+      // Czyścimy interwał ponownego połączenia, jeśli połączenie się powiedzie
+      if (reconnectInterval.current) {
+        clearTimeout(reconnectInterval.current);
+        reconnectInterval.current = null;
+        console.log('Reconnect interval cleared.');
+      }
+
+      dispatch(
+        snackbarActionFunc({
+          status: 'SUCCESS',
+          message: 'Uzyskano połączenie z Tablicą',
+        })
+      );
+      ws.send(JSON.stringify({ type: 'connect', payload: 'admin' }));
     };
 
     ws.onmessage = (event) => {
@@ -27,30 +52,91 @@ function useWebSocket(url: string) {
         const parsedData = JSON.parse(event.data);
         setMessage(parsedData);
       } catch (error) {
-        console.error('Error parsing received data:', error);
+        dispatch(
+          snackbarActionFunc({
+            status: 'ERROR',
+            message: `Błąd przesyłania danych do tablicy. Error: ${error}`,
+          })
+        );
       }
     };
 
     ws.onclose = () => {
-      setStatus('closed');
+      console.log('WebSocket closed.');
+      setStatus(null);
+      dispatch(
+        snackbarActionFunc({
+          status: 'ERROR',
+          message: 'Połączenie z Tablicą zostało zamknięte',
+        })
+      );
+      attemptReconnect();
     };
 
-    ws.onerror = () => {
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
       setStatus('error');
+      dispatch(
+        snackbarActionFunc({
+          status: 'ERROR',
+          message: `Błąd połączenia z tablicą! Error: ${error}`,
+        })
+      );
+      attemptReconnect();
     };
+  }, [url, dispatch]);
+
+  const attemptReconnect = useCallback(() => {
+    // Sprawdzamy, czy już istnieje interwał próby ponownego połączenia
+    if (!reconnectInterval.current) {
+      reconnectInterval.current = setTimeout(() => {
+        console.log('Reconnecting...');
+        connectWebSocket();
+      }, 5000); // Spróbuj połączyć ponownie po 5 sekundach
+    } else {
+      console.log('Reconnect attempt is already scheduled.');
+    }
+  }, [connectWebSocket]);
+
+  useEffect(() => {
+    connectWebSocket();
 
     return () => {
-      ws.close();
+      // Czyścimy interwał próby ponownego połączenia
+      if (reconnectInterval.current) {
+        clearTimeout(reconnectInterval.current);
+        reconnectInterval.current = null;
+      }
+      // Zamykamy połączenie WebSocket, jeśli istnieje
+      if (
+        socketRef.current &&
+        (socketRef.current.readyState === WebSocket.OPEN ||
+          socketRef.current.readyState === WebSocket.CONNECTING)
+      ) {
+        console.log('Closing WebSocket connection.');
+        socketRef.current.close();
+      }
     };
-  }, [url]);
+  }, [connectWebSocket]);
 
-  const sendMessage = useCallback((message: any) => {
-    const ws = socketRef.current;
-    if (ws && ws.readyState === WebSocket.OPEN) {
-      const messageString = JSON.stringify(message);
-      ws.send(messageString);
-    }
-  }, []);
+  const sendMessage = useCallback(
+    (message: any) => {
+      const ws = socketRef.current;
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        const messageString = JSON.stringify(message);
+        ws.send(messageString);
+      } else {
+        dispatch(
+          snackbarActionFunc({
+            message: 'Połączenie z Tablicą nie jest możliwe!',
+            status: 'ERROR',
+          })
+        );
+        attemptReconnect();
+      }
+    },
+    [dispatch, attemptReconnect]
+  );
 
   return { message, sendMessage, status };
 }

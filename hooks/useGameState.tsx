@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { updateGameScore } from '../store/slices/gameState';
-import { updateSession } from '../store/slices/globalStateReducer';
+import { useAppDispatch, useAppSelector } from '@__store/hooks';
+import { updateGameScore } from '@__store/slices/gameState';
+import { updateSession } from '@__store/slices/globalStateReducer';
 
 const useGameState = (setTotalScore: (score: number) => void) => {
   const dispatch = useAppDispatch();
-  const gameStatus = useAppSelector((state) => state.gameState.gameStatus);
+  const { gameStatus } = useAppSelector((state) => state.gameState);
 
   useEffect(() => {
     if (gameStatus === 'SUMMARY-GAME') {

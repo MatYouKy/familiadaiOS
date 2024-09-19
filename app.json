@@ -2,30 +2,31 @@
   "expo": {
     "name": "familiadaiOS",
     "slug": "familiadaiOS",
-    "version": "1.0.0",
+    "version": "1.0.8",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/missed 512px.png",
     "userInterfaceStyle": "light",
     "backgroundColor": "#343434",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/familiada-splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000000"
     },
     "ios": {
-      "buildNu9mber": "1.0.0",
+      "buildNumber": "1.0.8",
       "supportsTablet": true,
       "bundleIdentifier": "com.matyou.familiadaiOS"
     },
     "android": {
       "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "foregroundImage": "./assets/familiada-splash.png",
+        "backgroundColor": "#000000"
+      },
+      "package": "com.matyou.familiadaiOS"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/missed 512px.png"
     },
     "extra": {
       "eas": {

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { TeamType } from '../types/game.type';
+import { TeamType } from '@__types/game.type';
 import {
   blueTeamActive,
   blueTeamCollectButton,
@@ -22,8 +22,7 @@ const useAddTeamFault = () => {
 
   const sessionActive = useAppSelector((state) => state.globalState.sessionActive);
 
-  const redTeam = useAppSelector((state) => state.teams.redTeam);
-  const blueTeam = useAppSelector((state) => state.teams.blueTeam);
+  const { redTeam, blueTeam } = useAppSelector((state) => state.teams);
 
   const addTeamFault = useCallback(
     (teamType: TeamType) => {
@@ -44,53 +43,53 @@ const useAddTeamFault = () => {
         }
       } else if (gameStatus === 'GAME') {
         if (!currentTeam.isActive) {
-          return
+          return;
         }
-          if (currentTeam.isActive && currentTeam.fault.length < 3) {
-            dispatch(
-              teamType === 'BLUE'
-                ? updateBlueTeamChance({ fault: 'GAME' })
-                : updateRedTeamChance({ fault: 'GAME' })
-            );
+        if (currentTeam.isActive && currentTeam.fault.length < 3) {
+          dispatch(
+            teamType === 'BLUE'
+              ? updateBlueTeamChance({ fault: 'GAME' })
+              : updateRedTeamChance({ fault: 'GAME' })
+          );
 
-            if (currentTeam.fault.length + 1 === 3) {
-              dispatch(
-                teamType === 'BLUE' ? redTeamExtraGame(true) : blueTeamExtraGame(true)
-              );
-            }
-          } else if (
-            currentTeam.extraGame &&
-            currentTeam.fault.length < 1 &&
-            opposingTeam.isActive
-          ) {
-            // Allow one fault for the non-active team with extraGame
+          if (currentTeam.fault.length + 1 === 3) {
             dispatch(
-              teamType === 'RED'
-                ? updateRedTeamChance({ fault: 'BATTLE' })
-                : updateBlueTeamChance({ fault: 'GAME' })
+              teamType === 'BLUE' ? redTeamExtraGame(true) : blueTeamExtraGame(true)
             );
-            dispatch(
-              teamType === 'RED' ? redTeamExtraGame(false) : blueTeamExtraGame(false)
-            );
-          } else if (currentTeam.fault.length < 1 && !sessionActive) {
-            if (!opposingTeam.isActive) {
-              if (teamType === 'RED') {
-                dispatch(blueTeamActive(true));
-              } else {
-                dispatch(redTeamActive(true));
-              }
-
-              setTimeout(() => {
-                dispatch(clearFaultFunc());
-              }, 5000);
-            }
-
-            dispatch(
-              teamType === 'RED'
-                ? updateRedTeamChance({ fault: 'BATTLE' })
-                : updateBlueTeamChance({ fault: 'BATTLE' })
-            );
+            dispatch(updateGameStatus('EXTRA-GAME'));
           }
+        } else if (
+          currentTeam.extraGame &&
+          currentTeam.fault.length < 1 &&
+          opposingTeam.isActive
+        ) {
+          dispatch(
+            teamType === 'RED'
+              ? updateRedTeamChance({ fault: 'BATTLE' })
+              : updateBlueTeamChance({ fault: 'GAME' })
+          );
+          dispatch(
+            teamType === 'RED' ? redTeamExtraGame(false) : blueTeamExtraGame(false)
+          );
+        } else if (currentTeam.fault.length < 1 && !sessionActive) {
+          if (!opposingTeam.isActive) {
+            if (teamType === 'RED') {
+              dispatch(blueTeamActive(true));
+            } else {
+              dispatch(redTeamActive(true));
+            }
+
+            setTimeout(() => {
+              dispatch(clearFaultFunc());
+            }, 5000);
+          }
+
+          dispatch(
+            teamType === 'RED'
+              ? updateRedTeamChance({ fault: 'BATTLE' })
+              : updateBlueTeamChance({ fault: 'BATTLE' })
+          );
+        }
       } else if (gameStatus === 'EXTRA-GAME') {
         if (teamType === 'RED' && redTeam.fault.length < 1) {
           dispatch(updateRedTeamChance({ fault: 'BATTLE' }));

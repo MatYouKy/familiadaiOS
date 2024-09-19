@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
-import { IQuestion } from '../types/game.type';
-import { useAppDispatch } from '../store/hooks';
-import { updateCurrentQuestion } from '../store/slices/gameState';
+import { IQuestion } from '@__types/game.type';
+import { useAppDispatch } from '@__store/hooks';
+import { updateCurrentQuestion } from '@__store/slices/gameState';
 
 const useQuestionState = () => {
   const dispatch = useAppDispatch();

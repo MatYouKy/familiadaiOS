@@ -1,9 +1,13 @@
 export const colorBase = {
   mainGold: '#d3a211',
-  white: '#fff',
+  white: {
+    default: '#fff',
+    shadow: '#ffffff44'
+  },
   background: {
     main: '#343434',
     dark: '#222222',
+    light: '#999999',
   },
   blue: {
     light: '#1188ff',
@@ -25,14 +29,17 @@ export const colorBase = {
     light: '#81c784',
     dark: '#388e3c',
   },
-  transparent: '#00000000'
+  transparent: '#00000000',
+  none: 'none'
 } as const;
 
 export type ColorAliases =
   | 'mainGold'
   | 'white'
+  | 'white-shadow'
   | 'backgroundMain'
   | 'backgroundDark'
+  | 'backgroundLight'
   | 'blueLight'
   | 'bluePastel'
   | 'blueMain'
@@ -47,13 +54,16 @@ export type ColorAliases =
   | 'successMain'
   | 'successLight'
   | 'successDark'
+  | 'none'
   | 'transparent';
 
 export const colorMap: Record<ColorAliases, string> = {
   mainGold: colorBase.mainGold,
-  white: colorBase.white,
+  white: colorBase.white.default,
+  'white-shadow': colorBase.white.shadow,
   backgroundMain: colorBase.background.main,
   backgroundDark: colorBase.background.dark,
+  backgroundLight: colorBase.background.light,
   blueLight: colorBase.blue.light,
   bluePastel: colorBase.blue.pastel,
   blueMain: colorBase.blue.main,
@@ -68,5 +78,6 @@ export const colorMap: Record<ColorAliases, string> = {
   successMain: colorBase.success.main,
   successLight: colorBase.success.light,
   successDark: colorBase.success.dark,
-  transparent: colorBase.transparent
+  transparent: colorBase.transparent,
+  none: colorBase.none,
 };
