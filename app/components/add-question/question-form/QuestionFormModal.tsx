@@ -278,7 +278,7 @@ export const QuestionFormModal: FC<IQuestionFormModal> = ({
 
 const styles = StyleSheet.create({
   questionForm: {
-    backgroundColor: colorBase.background.main,
+    backgroundColor: colorBase.backgroundMain,
     flex: 1,
     padding: 48,
   },
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
   headingText: {
     textAlign: 'center',
     fontSize: 24,
-    color: colorBase.white.default,
+    color: colorBase.whiteDefault,
     marginVertical: 16,
   },
   content: {
@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
   },
   contentText: {
     fontSize: 24,
-    color: colorBase.white.default,
+    color: colorBase.whiteDefault,
   },
   questionTextWrapper: {
     flexDirection: 'row',
@@ -312,11 +312,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     paddingHorizontal: 6,
     borderBottomWidth: 1,
-    borderBottomColor: colorBase.blue.pastel,
+    borderBottomColor: colorBase.bluePastel,
   },
   questionInputText: {
     width: '90%',
-    color: colorBase.white.default,
+    color: colorBase.whiteDefault,
     fontStyle: 'italic',
     fontSize: 24,
   },

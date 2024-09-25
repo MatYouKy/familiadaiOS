@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   initialGameContainer: {
     paddingTop: 48,
     flex: 1,
-    backgroundColor: colorBase.background.dark,
+    backgroundColor: colorBase.backgroundDark,
     width: '100%',
   },
   buttonWrapper: {

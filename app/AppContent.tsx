@@ -1,24 +1,27 @@
 import React, { useLayoutEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text, Modal } from 'react-native';
 import { colorBase } from '@__colors/colorBase';
-import { InitializeConnect } from '../components/connect/initialize-connect/InitializeConnect';
+import { InitializeConnect } from './connect/InitializeConnect';
 import { useAppSelector } from '@__store/hooks';
 import { Game } from './components/game/Game';
 import Snackbar from '@__components/ui/snackbar/Snackbar';
-import { LoaderModal } from '@__components/ui/loader/Loader';
+import { Loader, LoaderModal } from '@__components/ui/loader/Loader';
 import useIpConnection from '@__hooks/useIpConnection';
 
 export const AppContent = () => {
   const snackbarAction = useAppSelector((state) => state.snackbarAction);
   const {
-    inputIpAddress,
-    handleIpValue,
+    validIpAddress,
     handleFirstStart,
-    handleButtonPress,
+    ipValueCheckFunc,
     storedValue,
     connection,
     isLoading,
     status,
+    sendWebSocketMessage,
+    websocketMessage,
+    webSocketStatus,
+    restoreCounter,
   } = useIpConnection();
 
   useLayoutEffect(() => {
@@ -27,21 +30,36 @@ export const AppContent = () => {
 
   return (
     <View style={styles.appContainer}>
-      {connection && <Game storedIp={storedValue} />}
+      <Game
+        sendWebSocketMessage={sendWebSocketMessage}
+        websocketMessage={websocketMessage}
+        webSocketStatus={webSocketStatus}
+      />
       <LoaderModal
         size="large"
         color="mainGold"
         modalIsOpen={isLoading || (connection && status === 'pending')}
         transparent
       />
-      <InitializeConnect
-        connection={connection}
-        handleButtonPress={handleButtonPress}
-        handleIpValue={handleIpValue}
-        inputIpAddress={inputIpAddress}
-        isLoading={isLoading}
-        storedValue={storedValue}
-      />
+      {!connection && restoreCounter ? (
+        <Modal visible={!connection && !!restoreCounter}>
+          <View style={styles.modalWrapper}>
+            <Text style={styles.restoreCounterText}>
+              Następuje {restoreCounter} próba przywrócenia połączenia ze 120 prób!
+            </Text>
+            <Loader color="mainGold" size="large" />
+          </View>
+        </Modal>
+      ) : (
+        <InitializeConnect
+          connection={connection}
+          handleIpValueCheck={ipValueCheckFunc}
+          validIpAddress={validIpAddress}
+          isLoading={isLoading}
+          storedValue={storedValue}
+          status={status}
+        />
+      )}
       {snackbarAction && <Snackbar snackbarAction={snackbarAction} />}
     </View>
   );
@@ -52,6 +70,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colorBase.background.main,
+    backgroundColor: colorBase.backgroundMain,
+  },
+  restoreCounterText: {
+    color: colorBase.whiteDefault,
+    fontSize: 24,
+    textTransform: 'uppercase',
+  },
+  modalWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colorBase.backgroundMain,
+    gap: 24,
   },
 });

@@ -1,10 +1,10 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { Modal, View, StyleSheet, TextInput } from 'react-native';
 import { colorBase } from '@__colors/colorBase';
-import { Input } from 'app/menage-questions/Input';
 import { ActionButton, Divider } from '@__components/ui';
 import { IModalAction } from '@__types/ui.type';
 import { FormAnswerType } from './QuestionFormModal';
+import { Input } from '../../../../components/ui/Input/Input';
 
 interface IAnswerModal {
   editMode?: boolean;
@@ -131,7 +131,7 @@ export const AnswerModal: FC<IAnswerModal> = ({
 
 const styles = StyleSheet.create({
   editModalWrapper: {
-    backgroundColor: colorBase.background.main,
+    backgroundColor: colorBase.backgroundMain,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     minWidth: '60%',
     padding: 48,
     borderWidth: 2,
-    borderColor: colorBase.blue.main,
+    borderColor: colorBase.blueMain,
     borderRadius: 24,
   },
   buttonsWrapper: {

@@ -60,24 +60,24 @@ export const GameTeam: FC<IGameTeam> = ({ teamData }) => {
   const teamVarriable =
     teamType === 'BLUE'
       ? {
-          color: colorBase.blue.default,
-          hoverColor: colorBase.blue.default,
+          color: colorBase.blueDefault,
+          hoverColor: colorBase.whiteDefault,
           heading: 'Zmień nazwę drużyny Niebieskiej!',
         }
       : {
-          color: colorBase.red.default,
-          hoverColor: colorBase.red.shadow,
+          color: colorBase.redDefault,
+          hoverColor: colorBase.redShadow,
           heading: 'Zmień nazwę drużyny Czerwonej!',
         };
 
   const teamBackgroundColor =
     teamType === 'BLUE'
       ? blueIsActive
-        ? colorBase.blue.default
-        : colorBase.background.main
+        ? colorBase.whiteDefault
+        : colorBase.backgroundMain
       : redIsActive
-        ? colorBase.red.shadow
-        : colorBase.background.main;
+        ? colorBase.redShadow
+        : colorBase.backgroundMain;
 
   const shouldBeActive =
     (teamData.isActive && teamData.fault.length < 3) ||
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
   },
   teamAction: {
-    backgroundColor: colorBase.background.dark,
+    backgroundColor: colorBase.backgroundDark,
     margin: 8,
     borderRadius: 50,
     padding: 16,

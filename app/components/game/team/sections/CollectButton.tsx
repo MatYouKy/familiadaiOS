@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC } from 'react';
 import { Button, StyleSheet, View } from 'react-native';
 import { ITeam } from '@__types/game.type';
 import { colorBase } from '@__colors/colorBase';
@@ -12,13 +12,13 @@ export const CollectButton: FC<ICollectButton> = ({ teamType, handleCollectScore
   return (
     <View style={styles[teamType]}>
       <Button
-        color={colorBase.white.default}
+        color={colorBase.whiteDefault}
         title="COLLECT"
         onPress={handleCollectScore}
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   BLUE: {
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
   RED: {
     borderWidth: 2,
-    borderColor: colorBase.white.default,
+    borderColor: colorBase.whiteDefault,
     borderRadius: 50,
   },
 });

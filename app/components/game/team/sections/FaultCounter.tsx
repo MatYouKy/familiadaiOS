@@ -7,7 +7,7 @@ import { Missed } from '@__ui/Missed/BigMissed';
 interface IFaultCounter {
   fault: IFault[];
 }
-const FaultCounter: FC<IFaultCounter> = ({ fault }) => {  
+const FaultCounter: FC<IFaultCounter> = ({ fault }) => {
   const faultList = fault.map((faultItem, index) => (
     <Missed
       key={`${faultItem.fault}-${index}`}
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 8,
     borderBottomColor: colorBase.mainGold,
     paddingVertical: 16,
-    backgroundColor: colorBase.background.main
+    backgroundColor: colorBase.backgroundMain,
   },
   faultContainer: {
     color: colorBase.mainGold,

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '@__store/hooks';
 import InitialGame from './initial-game/InitialGame';
 import { StartGame } from './start-game/StartGame';
@@ -14,25 +14,62 @@ import {
 import { initialStateFunc } from '@__store/slices/gameState';
 import useQuestionState from '@__hooks/useQuestionState';
 import { EndGame } from './end-game/EndGame';
-import useWebSocket from '@__hooks/useWebSocket';
-import { WebsocketBoard, WebsocketTeam } from '@__types/game.type';
+import {
+  ConnectType,
+  IWebSocketMessage,
+  WebsocketBoard,
+  WebsocketTeam,
+} from '@__types/game.type';
 import GameLayout from './GameLayout';
-import { snackbarActionFunc } from '@__store/slices/snackbarSlice';
 // import usePulpitSocket from '@__hooks/usePulpitSocket';
 
 interface IGame {
-  storedIp: string | null;
+  sendWebSocketMessage: (message: any) => void;
+  websocketMessage?: IWebSocketMessage['payload'] | null;
+  webSocketStatus: ConnectType;
 }
-export const Game: FC<IGame> = ({ storedIp }) => {
+export const Game: FC<IGame> = ({
+  sendWebSocketMessage: sendMessage,
+  webSocketStatus: status,
+}) => {
   const gameProgress = useAppSelector((state) => state.globalState.gameProgress);
   const gameState = useAppSelector((state) => state.gameState);
   const { blueTeam, redTeam } = useAppSelector((state) => state.teams);
 
+  const { questions } = useAppSelector((state) => state.globalState);
+  const { roundNumber } = useAppSelector((state) => state.gameState);
+
+  const { initializeQuestion } = useQuestionState();
+
+  const gameDataRef = useRef({
+    redTeam,
+    blueTeam,
+    board: {
+      answers: gameState.currentQuestion.answers,
+      question: gameState.currentQuestion.question,
+      score: gameState.score,
+      roundNumber: gameState.roundNumber,
+      gameProgress: gameProgress,
+      gameStatus: gameState.gameStatus,
+      introMusic: gameState.introMusic,
+      stationActive: gameState.startCompetition,
+    },
+  });
+
+  useEffect(() => {
+    console.log('testowy effekt');
+    gameDataRef.current = {
+      ...gameDataRef.current,
+      board: {
+        ...gameDataRef.current.board,
+        answers: gameState.currentQuestion.answers,
+      },
+      blueTeam,
+      redTeam,
+    };
+  }, [status, blueTeam, redTeam, gameState.currentQuestion.answers]);
+
   const dispatch = useAppDispatch();
-
-  const wsUrl = `ws://${storedIp}:2121`;
-
-  const { status, sendMessage } = useWebSocket(wsUrl);
 
   // const { status: status2, message } = usePulpitSocket();
 
@@ -54,7 +91,7 @@ export const Game: FC<IGame> = ({ storedIp }) => {
           teamType: 'BLUE',
           totalScore: blueTeam.totalScore,
           name: blueTeam.name,
-          fault: blueTeam.fault,
+          fault: gameDataRef.current.blueTeam.fault,
           stationActive: blueTeam.stationActive,
         },
       };
@@ -77,38 +114,6 @@ export const Game: FC<IGame> = ({ storedIp }) => {
       sendMessage(sendBoard);
     }
   };
-
-  useEffect(() => {
-    if (status === 'success') {
-      dispatch(
-        snackbarActionFunc({
-          status: 'SUCCESS',
-          message: 'Uzyskano połączenie z tablicą odpowiedzi teleturnieju',
-        })
-      );
-    } else if (status === 'close') {
-      dispatch(
-        snackbarActionFunc({
-          status: 'ERROR',
-          message: 'Połączenie z tablicą odpowiedzi zostało zamknięte',
-        })
-      );
-    } else if (status === 'error') {
-      dispatch(
-        snackbarActionFunc({
-          status: 'ERROR',
-          message: 'Wystąpił nieoczekiwany błąd z połączeniem tablicy wyników',
-        })
-      );
-    } else if (status === 'pending') {
-      dispatch(
-        snackbarActionFunc({
-          status: 'EDIT',
-          message: 'Trwa nawiązywanie połączenia z tablicą wyników',
-        })
-      );
-    }
-  }, [status]);
 
   // useEffect(() => {
   //   const newMessage = message as unknown as { blueButton: boolean; redButton: boolean };
@@ -146,10 +151,10 @@ export const Game: FC<IGame> = ({ storedIp }) => {
       type: 'red-team',
       payload: {
         teamType: 'RED',
-        totalScore: redTeam.totalScore,
-        name: redTeam.name,
-        fault: redTeam.fault,
-        stationActive: redTeam.stationActive,
+        totalScore: gameDataRef.current.redTeam.totalScore,
+        name: gameDataRef.current.redTeam.name,
+        fault: gameDataRef.current.redTeam.fault,
+        stationActive: gameDataRef.current.redTeam.stationActive,
       },
     };
 
@@ -163,14 +168,15 @@ export const Game: FC<IGame> = ({ storedIp }) => {
       type: 'blue-team',
       payload: {
         teamType: 'BLUE',
-        totalScore: blueTeam.totalScore,
-        name: blueTeam.name,
-        fault: blueTeam.fault,
-        stationActive: blueTeam.stationActive,
+        totalScore: gameDataRef.current.blueTeam.totalScore,
+        name: gameDataRef.current.blueTeam.name,
+        fault: gameDataRef.current.blueTeam.fault,
+        stationActive: gameDataRef.current.blueTeam.stationActive,
       },
     };
 
     if (status === 'success') {
+      console.log('sendMessage(blue-team)', sendTeam);
       sendMessage(sendTeam);
     }
   }, [status, blueTeam, sendMessage, gameState]);
@@ -179,7 +185,7 @@ export const Game: FC<IGame> = ({ storedIp }) => {
     const sendBoard: WebsocketBoard = {
       type: 'board',
       payload: {
-        answers: gameState.currentQuestion.answers,
+        answers: gameDataRef.current.board.answers,
         question: gameState.currentQuestion.question,
         score: gameState.score,
         roundNumber: gameState.roundNumber,
@@ -194,11 +200,6 @@ export const Game: FC<IGame> = ({ storedIp }) => {
       sendMessage(sendBoard);
     }
   }, [status, gameState, gameProgress, sendMessage]);
-
-  const { questions } = useAppSelector((state) => state.globalState);
-  const { roundNumber } = useAppSelector((state) => state.gameState);
-
-  const { initializeQuestion } = useQuestionState();
 
   useEffect(() => {
     if (gameProgress === 'INIT') {

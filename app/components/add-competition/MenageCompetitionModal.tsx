@@ -24,8 +24,8 @@ import {
 } from '@__store/slices/competitionsStateSlice';
 import { CompetitionList } from './CompetitionList';
 import { snackbarActionFunc } from '@__store/slices/snackbarSlice';
-import { Input } from 'app/menage-questions/Input';
 import { QuestionFormModal } from '../add-question/question-form/QuestionFormModal';
+import { Input } from '../../../components/ui/Input/Input';
 
 interface IMenageCompetitionModal {
   addQuestionModal: boolean;
@@ -136,8 +136,7 @@ export const MenageCompetitionModal: FC<IMenageCompetitionModal> = ({
                 value: state.competitionTitle,
               }}
               isError={isTitleError}
-              errorText="Nazwa wydarzenia musi mieć co najmniej 3 znaki."
-            />
+              errorText="Nazwa wydarzenia musi mieć co najmniej 3 znaki."           />
             <TouchableOpacity onPress={dataPickerModalFunc.bind(this, true)}>
               <View style={styles.dateInput}>
                 <Text style={[styles.dateText, isDateError && styles.errorText]}>
@@ -157,7 +156,7 @@ export const MenageCompetitionModal: FC<IMenageCompetitionModal> = ({
               onCancel={dataPickerModalFunc.bind(this, false)}
               minimumDate={today}
               display={Platform.OS === 'ios' ? 'inline' : 'spinner'}
-              textColor={colorBase.white.default}
+              textColor={colorBase.whiteDefault}
               cancelTextIOS="Anuluj"
               confirmTextIOS="Potwierdź"
               customCancelButtonIOS={() => (
@@ -165,11 +164,11 @@ export const MenageCompetitionModal: FC<IMenageCompetitionModal> = ({
                   <Button
                     title="Anuluj"
                     onPress={dataPickerModalFunc.bind(this, false)}
-                    color={colorBase.blue.light}
+                    color={colorBase.blueLight}
                   />
                 </View>
               )}
-              pickerStyleIOS={{ backgroundColor: colorBase.background.main }}
+              pickerStyleIOS={{ backgroundColor: colorBase.backgroundMain }}
               themeVariant="dark"
             />
           </View>
@@ -219,10 +218,10 @@ export const MenageCompetitionModal: FC<IMenageCompetitionModal> = ({
 const styles = StyleSheet.create({
   appContainer: {
     flex: 1,
-    backgroundColor: colorBase.background.main,
+    backgroundColor: colorBase.backgroundMain,
   },
   heading: {
-    color: colorBase.blue.pastel,
+    color: colorBase.bluePastel,
     fontSize: 24,
     textTransform: 'uppercase',
     fontWeight: '600',
@@ -252,20 +251,20 @@ const styles = StyleSheet.create({
     color: 'red',
   },
   text: {
-    color: colorBase.white.default,
+    color: colorBase.whiteDefault,
   },
   buttonContainer: {
     padding: 8,
     borderWidth: 2,
     borderTopRightRadius: 16,
     borderTopLeftRadius: 16,
-    borderColor: colorBase.blue.light,
-    backgroundColor: colorBase.background.main,
+    borderColor: colorBase.blueLight,
+    backgroundColor: colorBase.backgroundMain,
   },
   buttonConfirmContainer: {
     padding: 8,
     borderWidth: 4,
-    borderColor: colorBase.blue.light,
+    borderColor: colorBase.blueLight,
     overflow: 'hidden',
   },
   question: {

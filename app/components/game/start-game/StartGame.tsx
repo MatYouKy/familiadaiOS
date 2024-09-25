@@ -8,7 +8,7 @@ import { ActionButton } from '@__components/ui';
 
 export const StartGame = () => {
   const dispatch = useAppDispatch();
-  const [timeLeft, setTimeLeft] = useState<number>(1);
+  const [timeLeft, setTimeLeft] = useState<number>(19);
   const [countdownStarted, setCountdownStarted] = useState<boolean>(false);
 
   useEffect(() => {
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     borderRadius: 200,
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor: colorBase.white.default,
+    borderColor: colorBase.whiteDefault,
     borderWidth: 16,
   },
   buttonText: {

@@ -52,24 +52,24 @@ export const QuestionTextModal: FC<IQuestionTextModal> = ({
 
 const styles = StyleSheet.create({
   wrapper: {
-    backgroundColor: colorBase.background.main,
+    backgroundColor: colorBase.backgroundMain,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     gap: 24,
   },
   headingText: {
-    color: colorBase.white.default,
+    color: colorBase.whiteDefault,
     fontSize: 24,
   },
   questionInputText: {
-    color: colorBase.white.default,
-    borderTopColor: colorBase.blue.main,
+    color: colorBase.whiteDefault,
+    borderTopColor: colorBase.blueMain,
     fontSize: 24,
     borderWidth: 0,
     padding: 8,
     minWidth: 640,
-    borderBottomColor: colorBase.blue.default,
+    borderBottomColor: colorBase.whiteDefault,
     borderBottomWidth: 1,
-  }
+  },
 });

@@ -35,7 +35,7 @@ export const AnswerList: FC<IAnswerList> = ({ list }) => {
                 ...styles.listItem,
                 backgroundColor: answer.item.isVisible
                   ? '#001100'
-                  : colorBase.background.main,
+                  : colorBase.backgroundMain,
               }}
             >
               <Text
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   listItemText: {
     textTransform: 'uppercase',
     letterSpacing: 2,
-    color: colorBase.white.default,
+    color: colorBase.whiteDefault,
     padding: 16,
     fontSize: 24,
   },

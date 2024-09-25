@@ -4,10 +4,7 @@ import { colorBase } from '@__colors/colorBase';
 import { ICompetition } from '@__types/game.type';
 import { Divider } from '@__ui/divider/Divider';
 import { useAppDispatch } from '@__store/hooks';
-import {
-  startGame,
-  updateGameProgress,
-} from '@__store/slices/globalStateReducer';
+import { startGame, updateGameProgress } from '@__store/slices/globalStateReducer';
 import { ActionButton } from '@__ui/actions/ActionButton';
 import { AnswerRenderList } from './AnswerRenderList';
 import { startGameTeam } from '@__store/slices/teamsState';
@@ -51,14 +48,9 @@ export const QuestionModal: FC<IQuestionModal> = ({
               }}
               renderItem={(question) => {
                 return (
-                  <View
-                    style={styles.answersListWrapper}
-                    key={question.item.id}
-                  >
+                  <View style={styles.answersListWrapper} key={question.item.id}>
                     <View style={styles.questionHeadingWrapper}>
-                      <Text style={styles.questionHeading}>
-                        {question.item.question}
-                      </Text>
+                      <Text style={styles.questionHeading}>{question.item.question}</Text>
                     </View>
                     <AnswerRenderList answers={question.item.answers} />
                     <Divider fullwidth />
@@ -89,13 +81,13 @@ export const QuestionModal: FC<IQuestionModal> = ({
 
 const styles = StyleSheet.create({
   questionHeading: {
-    color: colorBase.white.default,
+    color: colorBase.whiteDefault,
     fontSize: 16,
     marginVertical: 24,
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: colorBase.background.main,
+    backgroundColor: colorBase.backgroundMain,
     padding: 24,
     justifyContent: 'center',
     alignItems: 'center',
@@ -117,12 +109,11 @@ const styles = StyleSheet.create({
   answersList: {
     width: '100%',
     marginVertical: 48,
-
   },
   inputHeading: {
     textAlign: 'center',
     top: 0,
-    color: colorBase.white.default,
+    color: colorBase.whiteDefault,
     textTransform: 'uppercase',
     fontSize: 24,
     letterSpacing: 2,
@@ -147,7 +138,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 4,
     marginTop: 24,
-    borderColor: colorBase.background.dark,
+    borderColor: colorBase.backgroundDark,
     backgroundColor: colorBase.mainGold,
   },
   answersListWrapper: {
@@ -166,5 +157,4 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-
 });

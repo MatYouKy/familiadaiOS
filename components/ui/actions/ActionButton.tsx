@@ -8,7 +8,8 @@ import {
   TextStyle,
   PressableProps,
 } from 'react-native';
-import { ColorAliases, colorMap } from '@__colors/colorBase';
+import { ColorAliases, colorBase, colorMap } from '@__colors/colorBase';
+import { hexToRgba } from '@__utils/hexToRGBA';
 
 export type FontSizeAliases = 'x-small' | 'small' | 'medium' | 'large' | 'x-large';
 
@@ -36,8 +37,8 @@ interface IActionButton {
 export const ActionButton: FC<IActionButton> = ({
   onPress,
   title,
-  backgroundColor = 'white',
-  color = "backgroundMain",
+  backgroundColor = 'backgroundMain',
+  color = "whiteDefault",
   // variant = 'DEFAULT',
   size = 'medium',
   fullwidth = false,
@@ -53,7 +54,11 @@ export const ActionButton: FC<IActionButton> = ({
       <View
         style={[
           styles.buttonContainer,
-          { backgroundColor: disabled ? colorMap[backgroundColor] : colorMap[backgroundColor] },
+          {
+            backgroundColor: disabled
+              ? hexToRgba(colorBase[backgroundColor], 0.3)
+              : colorMap[backgroundColor],
+          },
           buttonStyle as ViewStyle,
           disabled && styles.disabledButton,
         ]}

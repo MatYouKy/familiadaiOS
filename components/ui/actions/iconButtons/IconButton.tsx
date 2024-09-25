@@ -122,11 +122,11 @@ const styles = StyleSheet.create({
     borderRadius: 36,
   },
   optionalTextStyle: {
-    color: colorBase.white.default,
+    color: colorBase.whiteDefault,
     textTransform: 'uppercase',
-    marginTop: 4
+    marginTop: 4,
   },
   iconContainer: {
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 });

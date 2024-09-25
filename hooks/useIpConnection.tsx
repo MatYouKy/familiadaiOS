@@ -1,154 +1,282 @@
-import { useCallback, useEffect, useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAppDispatch } from '@__store/hooks';
 import useAsyncStorage from '@__hooks/useAsyncStorage';
 import { connectState } from '@__store/slices/webSocketSlice';
-import { ConnectType, IConnect } from '@__types/game.type';
+import { ConnectType, IConnect, ISnackbar, IWebSocketMessage } from '@__types/game.type';
 import { snackbarActionFunc } from '@__store/slices/snackbarSlice';
+import { Alert } from 'react-native';
 
 const useIpConnection = () => {
   const { storedValue, setValue } = useAsyncStorage('lastIp');
-  const [inputIpAddress, setInputIpAddress] = useState<string>('');
-  const [testConnection, setTestConnection] = useState(false);
-  const [restoreConnection, setRestoreConnection] = useState(false);
+  const restoreCounterLimit = 120;
+
+  const [websocketMessage, setMessage] = useState<IWebSocketMessage['payload'] | null>(
+    null
+  );
+  const [ipAddress, setIpAddress] = useState<string>('');
   const [restoreCounter, setRestoreCounter] = useState(0);
   const [connection, setConnection] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [firstStart, setFirtsStart] = useState(false);
-  const [status, setStatus] = useState<ConnectType>('close');
+  const [status, setStatus] = useState<ConnectType>(null);
+  const [webSocketStatus, setWebSocketStatus] = useState<ConnectType>(null);
+
+  const isSuccessRef = useRef(true);
+  const socketRef = useRef<WebSocket | null>(null);
+  const reconnectInterval = useRef<NodeJS.Timeout | null>(null);
+  const snackbarRestore = useRef<ISnackbar | null>(null);
+
+  //TESTY Połączenia
+  const [testConnection, setTestConnection] = useState(false);
+  const [restoreStableConnection, setRestoreStableConnection] = useState(false);
 
   const dispatch = useAppDispatch();
-  const restoreCounterLimit = 120;
 
-  const handleIpValue = (ipAddress: string) => {
-    setInputIpAddress(ipAddress);
+  const fetchWithTimeout = (
+    url: string,
+    options: RequestInit,
+    timeout = 5000
+  ): Promise<Response> => {
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => {
+        reject(new Error('Request timed out'));
+      }, timeout);
+
+      fetch(url, options)
+        .then((response) => {
+          clearTimeout(timer);
+          resolve(response as Response); // Rzutowanie odpowiedzi na typ Response
+        })
+        .catch((err) => {
+          clearTimeout(timer);
+          reject(err);
+        });
+    });
   };
+
+  // Funkcja łączenia z WebSocket
+  const connectWebSocket = useCallback(() => {
+    if (!ipAddress) return;
+    if (
+      socketRef.current &&
+      (socketRef.current.readyState === WebSocket.OPEN ||
+        socketRef.current.readyState === WebSocket.CONNECTING)
+    ) {
+      return;
+    }
+
+    const socketUrl = `ws://${ipAddress}:2121`;
+    const ws = new WebSocket(socketUrl);
+    socketRef.current = ws;
+
+    ws.onopen = () => {
+      setWebSocketStatus('success');
+
+      // Czyścimy interwał ponownego połączenia, jeśli połączenie się powiedzie
+      if (reconnectInterval.current) {
+        clearTimeout(reconnectInterval.current);
+        reconnectInterval.current = null;
+      }
+      snackbarRestore.current = {
+        status: 'SUCCESS',
+        message: 'Uzyskano połączenie z WebSocket',
+      };
+      dispatch(snackbarActionFunc(snackbarRestore.current));
+      ws.send(JSON.stringify({ type: 'connect', payload: 'admin' }));
+    };
+
+    ws.onmessage = (event) => {
+      try {
+        const parsedData = JSON.parse(event.data);
+        setMessage(parsedData);
+      } catch (error) {
+        snackbarRestore.current = {
+          status: 'ERROR',
+          message: `Błąd przesyłania danych do WebSocket. Error: ${error}`,
+        };
+        dispatch(snackbarActionFunc(snackbarRestore.current));
+      }
+    };
+
+    ws.onclose = () => {
+      snackbarRestore.current = {
+        status: 'ERROR',
+        message: 'Połączenie z WebSocket zostało zamknięte onClose',
+      };
+      dispatch(snackbarActionFunc(snackbarRestore.current));
+      setWebSocketStatus('close');
+
+      // Dodaj logikę ponownego połączenia
+      attemptReconnectWebSocket();
+    };
+
+    ws.onerror = (error) => {
+      setWebSocketStatus('error');
+      snackbarRestore.current = {
+        status: 'ERROR',
+        message: `Błąd połączenia z WebSocket! Error: ${error}`,
+      };
+      dispatch(snackbarActionFunc(snackbarRestore.current));
+
+      // Dodaj logikę ponownego połączenia
+      attemptReconnectWebSocket();
+    };
+  }, [ipAddress, dispatch]);
+
+  const attemptReconnectWebSocket = useCallback(() => {
+    if (!reconnectInterval.current) {
+      reconnectInterval.current = setInterval(() => {
+        connectWebSocket(); // Próba ponownego połączenia
+      }, 3000); // Spróbuj połączyć ponownie co 5 sekund
+    }
+  }, [connectWebSocket]);
+
+  const sendWebSocketMessage = useCallback(
+    (message: any) => {
+      const ws = socketRef.current;
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        const messageString = JSON.stringify(message);
+        ws.send(messageString);
+      } else {
+        snackbarRestore.current = {
+          message: 'Połączenie z WebSocket nie jest możliwe!',
+          status: 'ERROR',
+        };
+        dispatch(snackbarActionFunc(snackbarRestore.current));
+      }
+    },
+    [dispatch]
+  );
 
   const handleFirstStartApp = (action: boolean) => {
     setFirtsStart(action);
   };
 
+  const validIpAddress = (ipAddress: string) => {
+    setIpAddress(ipAddress);
+  };
+
   const testConnectionWhenSuccesFunc = useCallback(async () => {
     try {
-      const response = await fetch(`http://${inputIpAddress}:2020/get-ip`, {
+      const response = await fetch(`http://${storedValue}:2020/get-ip`, {
         method: 'GET',
       });
+
       if (response.ok) {
         setConnection(true);
         setStatus('success');
+        isSuccessRef.current = true;
+
+        // Po udanym połączeniu IP, połącz WebSocket
+        connectWebSocket();
       }
     } catch (error) {
-      console.error('Connection failed:', error);
       dispatch(
         snackbarActionFunc({
           status: 'ERROR',
           message: 'Połączenie zostało zerwane',
         })
       );
+      setConnection(false);
       setTestConnection(false);
-      setRestoreConnection(true);
       setRestoreCounter(0);
+      setRestoreStableConnection(true);
       setStatus('error');
+      isSuccessRef.current = false;
     }
-  }, [inputIpAddress]);
+  }, [storedValue, dispatch, connectWebSocket]);
 
-  const restoreConnectionFunc = useCallback(
-    async (restoreCounter: number) => {
+  const restoreConnectionFunc = useCallback(async () => {
+    try {
+      const response = await fetch(`http://${storedValue}:2020/get-ip`, {
+        method: 'GET',
+      });
+      if (response.ok) {
+        isSuccessRef.current = true;
+        setStatus('success');
+        setRestoreStableConnection(false);
+        setTestConnection(true);
+        setConnection(true);
+        setRestoreCounter(0);
+        connectWebSocket();
+      }
+    } catch (error) {
+      setRestoreCounter((prev) => prev + 1);
+      setTestConnection(false);
+      isSuccessRef.current = false;
+      snackbarRestore.current = {
+        status: 'ERROR',
+        message: `Następuje przywracanie połączenie z punktem dostępu: ${restoreCounter + 1}`,
+        snackbarHideAfter: 3.2,
+      };
+      if (snackbarRestore.current?.status === status?.toUpperCase()) {
+        return;
+      } else {
+        dispatch(snackbarActionFunc(snackbarRestore.current));
+      }
+
+      if (restoreCounter + 1 >= restoreCounterLimit) {
+        setRestoreCounter(0);
+        setConnection(false);
+        handleFirstStartApp(true);
+        setStatus('close');
+      }
+    }
+  }, [
+    storedValue,
+    dispatch,
+    restoreCounter,
+    handleFirstStartApp,
+    connectWebSocket,
+    status,
+  ]);
+
+  // Zmodyfikowana funkcja handleSubmit
+  const handleSubmit = useCallback(
+    async (ipAddress: IConnect['ipAddress']) => {
+      if (!firstStart) return; // Nie wykonuj, jeśli aplikacja nie jest w pierwszym starcie
+      setLoading(true);
+
       try {
-        console.log(`Attempting to restore connection to ${storedValue}...`);
-        const response = await fetch(`http://${storedValue}:2020/get-ip`, {
-          method: 'GET',
-        });
+        if (!ipAddress) return;
+
+        // Używamy fetchWithTimeout z limitem czasu np. 5 sekund
+        const response = await fetchWithTimeout(
+          `http://${ipAddress}:2020/get-ip`,
+          {
+            method: 'GET',
+          },
+          3000
+        ); // Timeout ustawiony na 5000 ms (5 sekund)
+
         if (response.ok) {
-          console.log('Connection restored successfully');
+          handleFirstStartApp(false); // Wyłączamy tryb pierwszego startu
+          setValue(ipAddress);
           setStatus('success');
+          setConnection(true);
+          setTestConnection(true);
+          isSuccessRef.current = true;
+
+          dispatch(
+            snackbarActionFunc({
+              status: 'SUCCESS',
+              message: 'Połączenie zostało nawiązane!',
+            })
+          );
+
           dispatch(
             connectState({
-              ipAddress: storedValue,
+              ipAddress,
               status: 'success',
               message: 'Connection successful',
             })
           );
-          dispatch(
-            snackbarActionFunc({
-              status: 'SUCCESS',
-              message: 'Połączenie zostało przywrócone',
-            })
-          );
-          setConnection(true);
-          setTestConnection(true);
-          setRestoreConnection(false);
-          setRestoreCounter(0);
+
+          connectWebSocket();
         }
       } catch (error) {
-        console.error(`Restore attempt #${restoreCounter} failed`, error);
-        setRestoreCounter((prev) => prev + 1);
-        dispatch(
-          snackbarActionFunc({
-            status: 'ERROR',
-            message: `Następuje przywracanie połączenie z punktem dostępu: ${restoreCounter + 1}`,
-            snackbarHideAfter: 3.2,
-          })
-        );
-
-        if (restoreCounter + 1 >= restoreCounterLimit) {
-          console.log('Restore attempts exceeded limit, resetting...');
-          setRestoreCounter(0);
-          setRestoreConnection(false);
-          setInputIpAddress('');
-          setConnection(false);
-          handleFirstStartApp(true);
-          setStatus('close');
-        }
-      }
-    },
-    [storedValue, dispatch, handleFirstStartApp]
-  );
-
-  const handleSubmit = useCallback(
-    async (ipAddress: IConnect['ipAddress']) => {
-      if (!firstStart) return;
-      setLoading(true);
-      try {
-        if (!ipAddress) return;
-
-        console.log(`Attempting to connect to ${ipAddress}...`);
-        const response = await fetch(`http://${ipAddress}:2020/get-ip`, {
-          method: 'GET',
-        });
-
-        if (response.ok) {
-          console.log('Connection established');
-          handleFirstStartApp(false);
-          setValue(ipAddress);
-          const timeout = setTimeout(() => {
-            setStatus('success');
-            setConnection(true);
-            setTestConnection(true);
-            dispatch(
-              snackbarActionFunc({
-                status: 'SUCCESS',
-                message: 'Połączenie zostało nawiązane!',
-              })
-            );
-            dispatch(
-              connectState({
-                ipAddress,
-                status: 'success',
-                message: 'Connection successful',
-              })
-            );
-            setLoading(false);
-          }, 1500);
-
-          return () => clearTimeout(timeout);
-        } else {
-          console.error('Server did not respond');
-          setLoading(false);
-          setStatus('error');
-          throw new Error('Server not responding.');
-        }
-      } catch (error) {
-        console.error('Connection failed:', error);
+        Alert.alert('Połączenie', 'Nie udało się połączyć z aplikacją desktopową');
         setStatus('error');
         dispatch(
           connectState({
@@ -157,52 +285,54 @@ const useIpConnection = () => {
             message: 'Server not responding.',
           })
         );
+
         if (!firstStart) {
           dispatch(
             snackbarActionFunc({
               status: 'ERROR',
               message:
-                'Nie można uzyskać połączenia! Spróbuj uruchomić aplikacje desktopową',
+                'Nie można uzyskać połączenia! Spróbuj uruchomić aplikację desktopową',
             })
           );
         }
+
         setStatus('error');
-        setRestoreCounter(0);
         setConnection(false);
         setTestConnection(false);
+        isSuccessRef.current = false;
+      } finally {
         setLoading(false);
         handleFirstStartApp(true);
       }
     },
-    [dispatch, setValue, firstStart]
+    [dispatch, setValue, firstStart, connectWebSocket]
   );
 
   useEffect(() => {
-    if (testConnection && storedValue) {
+    if (testConnection && !restoreStableConnection && isSuccessRef.current) {
       const testConnectInterval = setInterval(() => {
         testConnectionWhenSuccesFunc();
-      }, 5000); // Test co 5 sekund
+      }, 3000);
       return () => clearInterval(testConnectInterval);
     }
-  }, [testConnection, storedValue]);
+  }, [testConnection, testConnectionWhenSuccesFunc, restoreStableConnection]);
 
   useEffect(() => {
-    if (restoreConnection && !testConnection) {
+    if (restoreStableConnection && !testConnection && !isSuccessRef.current) {
       const restoreConnectInterval = setInterval(() => {
-        restoreConnectionFunc(restoreCounter);
-      }, 5000); // Próba przywrócenia co 5 sekund
+        restoreConnectionFunc();
+      }, 1000);
       return () => clearInterval(restoreConnectInterval);
     }
-  }, [restoreConnection, testConnection, restoreCounter]);
+  }, [restoreStableConnection, testConnection, restoreConnectionFunc]);
 
   return {
     restoreCounter,
-    inputIpAddress,
-    handleIpValue,
+    validIpAddress,
     handleSubmit,
-    handleButtonPress: () => {
-      if (inputIpAddress) {
-        handleSubmit(inputIpAddress);
+    ipValueCheckFunc: () => {
+      if (ipAddress) {
+        handleSubmit(ipAddress);
       }
     },
     handleFirstStart: (firstStart: boolean) => {
@@ -213,6 +343,9 @@ const useIpConnection = () => {
     connection,
     isLoading,
     firstStart,
+    websocketMessage,
+    sendWebSocketMessage,
+    webSocketStatus,
   };
 };
 

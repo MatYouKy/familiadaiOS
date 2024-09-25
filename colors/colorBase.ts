@@ -1,42 +1,32 @@
 export const colorBase = {
   mainGold: '#d3a211',
-  white: {
-    default: '#fff',
-    shadow: '#ffffff44'
-  },
-  background: {
-    main: '#343434',
-    dark: '#222222',
-    light: '#999999',
-  },
-  blue: {
-    light: '#1188ff',
-    pastel: '#4fc3f7',
-    main: '#29b6f6',
-    default: '#2476ff',
-    dark: '#0288d1',
-  },
-  red: {
-    default: '#dd0000',
-    light: '#e57373',
-    main: '#f44336',
-    dark: '#d32f2f',
-    shadow: '#dd000066',
-  },
+  whiteDefault: '#fff',
+  whiteShadow: '#ffffff44',
+  backgroundMain: '#343434',
+  backgroundDark: '#222222',
+  backgroundLight: '#999999', 
+  blueLight: '#1188ff',
+  bluePastel: '#4fc3f7',
+  blueMain: '#29b6f6',
+  blueDefault: '#2476ff',
+  blueDark: '#0288d1',
+  redDefault: '#dd0000',
+  redLight: '#e57373',
+  redMain: '#f44336',
+  redDark: '#d32f2f',
+  redShadow: '#dd000066',
   black: '#000000',
-  success: {
-    main: '#66bb6a',
-    light: '#81c784',
-    dark: '#388e3c',
-  },
+  successMain: '#66bb6a',
+  successLight: '#81c784',
+  successDark: '#388e3c',
   transparent: '#00000000',
-  none: 'none'
+  none: 'none',
 } as const;
 
 export type ColorAliases =
   | 'mainGold'
-  | 'white'
-  | 'white-shadow'
+  | 'whiteDefault'
+  | 'whiteShadow'
   | 'backgroundMain'
   | 'backgroundDark'
   | 'backgroundLight'
@@ -59,25 +49,25 @@ export type ColorAliases =
 
 export const colorMap: Record<ColorAliases, string> = {
   mainGold: colorBase.mainGold,
-  white: colorBase.white.default,
-  'white-shadow': colorBase.white.shadow,
-  backgroundMain: colorBase.background.main,
-  backgroundDark: colorBase.background.dark,
-  backgroundLight: colorBase.background.light,
-  blueLight: colorBase.blue.light,
-  bluePastel: colorBase.blue.pastel,
-  blueMain: colorBase.blue.main,
-  blueDefault: colorBase.blue.default,
-  blueDark: colorBase.blue.dark,
-  redDefault: colorBase.red.default,
-  redLight: colorBase.red.light,
-  redMain: colorBase.red.main,
-  redDark: colorBase.red.dark,
-  redShadow: colorBase.red.shadow,
+  whiteDefault: colorBase.whiteDefault,
+  whiteShadow: colorBase.whiteShadow,
+  backgroundMain: colorBase.backgroundMain,
+  backgroundDark: colorBase.backgroundDark,
+  backgroundLight: colorBase.backgroundLight,
+  blueLight: colorBase.blueLight,
+  bluePastel: colorBase.bluePastel,
+  blueMain: colorBase.blueMain,
+  blueDefault: colorBase.blueDefault,
+  blueDark: colorBase.blueDark,
+  redDefault: colorBase.redDefault,
+  redLight: colorBase.redLight,
+  redMain: colorBase.redMain,
+  redDark: colorBase.redDark,
+  redShadow: colorBase.redShadow,
   black: colorBase.black,
-  successMain: colorBase.success.main,
-  successLight: colorBase.success.light,
-  successDark: colorBase.success.dark,
+  successMain: colorBase.successMain,
+  successLight: colorBase.successLight,
+  successDark: colorBase.successDark,
   transparent: colorBase.transparent,
   none: colorBase.none,
 };

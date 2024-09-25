@@ -24,13 +24,13 @@ export const NameModal: FC<INameModal> = ({ isOpen, closeModal, teamType }) => {
   const teamVarriable =
     teamType === 'BLUE'
       ? {
-          color: colorBase.blue.default,
-          backColor: colorBase.blue.default,
+          color: colorBase.blueDefault,
+          backColor: colorBase.whiteDefault,
           heading: 'Zmień nazwę drużyny Niebieskiej!',
         }
       : {
-          color: colorBase.red.default,
-          backColor: colorBase.white.default,
+          color: colorBase.redDefault,
+          backColor: colorBase.whiteDefault,
           heading: 'Zmień nazwę drużyny Czerwonej!',
         };
 
@@ -106,7 +106,7 @@ export const NameModal: FC<INameModal> = ({ isOpen, closeModal, teamType }) => {
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    backgroundColor: colorBase.background.main,
+    backgroundColor: colorBase.backgroundMain,
     padding: 24,
     justifyContent: 'center',
     alignItems: 'center',

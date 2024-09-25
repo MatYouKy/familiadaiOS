@@ -44,7 +44,7 @@ export const LoaderModal: FC<IModalLoader> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colorBase.white.shadow,
+    backgroundColor: colorBase.whiteShadow,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',

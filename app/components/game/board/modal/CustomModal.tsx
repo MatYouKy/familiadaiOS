@@ -62,14 +62,14 @@ export const CustomModal: FC<IRestartSessionModal> = ({
 
 const styles = StyleSheet.create({
   modalWrapper: {
-    backgroundColor: colorBase.background.main,
+    backgroundColor: colorBase.backgroundMain,
     flex: 1,
     width: 'auto',
     alignItems: 'center',
     justifyContent: 'center',
   },
   heading: {
-    color: colorBase.white.default,
+    color: colorBase.whiteDefault,
     fontSize: 24,
     marginBottom: 48,
     textAlign: 'center',
@@ -89,9 +89,9 @@ const styles = StyleSheet.create({
   contentWrapper: {
     borderRadius: 24,
     padding: 64,
-    backgroundColor: colorBase.background.dark,
+    backgroundColor: colorBase.backgroundDark,
     borderWidth: 5,
-    borderColor: colorBase.red.default,
+    borderColor: colorBase.redDefault,
     maxWidth: '65%',
   },
 });

@@ -25,3 +25,10 @@ export interface IModalAction {
   isOpen: boolean;
   onClose: () => void;
 }
+
+
+export interface InputTextValidProps {
+  ipAddressValue: string;
+  isValid: boolean;
+  isTouched?: boolean;
+}

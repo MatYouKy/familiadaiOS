@@ -28,7 +28,7 @@ export const WarringModal: FC<IRestartSessionModal> = ({
             <View
               style={{
                 ...styles.buttonWrapper,
-                borderColor: colorBase.blue.main,
+                borderColor: colorBase.blueMain,
               }}
             >
               <Button title="Anuluj" onPress={closeModal} />
@@ -39,13 +39,13 @@ export const WarringModal: FC<IRestartSessionModal> = ({
                 borderColor: colorBase.mainGold,
               }}
             >
-              {id &&
-              <Button
-                title="Usuń"
-                color={colorBase.mainGold}
-                onPress={handleRemoveItem.bind(this, id)}
-              />
-}
+              {id && (
+                <Button
+                  title="Usuń"
+                  color={colorBase.mainGold}
+                  onPress={handleRemoveItem.bind(this, id)}
+                />
+              )}
             </View>
           </View>
         </View>
@@ -56,14 +56,14 @@ export const WarringModal: FC<IRestartSessionModal> = ({
 
 const styles = StyleSheet.create({
   modalWrapper: {
-    backgroundColor: colorBase.background.main,
+    backgroundColor: colorBase.backgroundMain,
     flex: 1,
     width: 'auto',
     alignItems: 'center',
     justifyContent: 'center',
   },
   heading: {
-    color: colorBase.white.default,
+    color: colorBase.whiteDefault,
     fontSize: 24,
     marginBottom: 48,
     textAlign: 'center',
@@ -84,6 +84,6 @@ const styles = StyleSheet.create({
   contentWrapper: {
     borderRadius: 24,
     padding: 64,
-    backgroundColor: colorBase.background.dark,
+    backgroundColor: colorBase.backgroundDark,
   },
 });

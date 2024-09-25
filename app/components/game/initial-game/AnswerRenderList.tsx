@@ -28,12 +28,8 @@ export const AnswerRenderList: FC<IAnswerRenderList> = ({ answers }) => {
               {showItems && (
                 <>
                   <View style={styles.answerItemTextWrapper}>
-                    <Text style={styles.answerItemText}>
-                      {answer.item.text}
-                    </Text>
-                    <Text style={styles.answerItemText}>
-                      {answer.item.score}
-                    </Text>
+                    <Text style={styles.answerItemText}>{answer.item.text}</Text>
+                    <Text style={styles.answerItemText}>{answer.item.score}</Text>
                   </View>
                   <Divider fullwidth height={0.5} color="blueDark" />
                 </>
@@ -55,14 +51,13 @@ export const AnswerRenderList: FC<IAnswerRenderList> = ({ answers }) => {
   );
 };
 
-
 const styles = StyleSheet.create({
   answerItemTextWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   answerItemText: {
-    color: colorBase.white.default,
+    color: colorBase.whiteDefault,
     margin: 4,
   },
   showButtonWrapper: {

@@ -85,7 +85,7 @@ export const QuestionItem: FC<IQuestionItem> = ({ question, index }) => {
 const styles = StyleSheet.create({
   questionInputText: {
     flex: 1,
-    color: colorBase.white.default,
+    color: colorBase.whiteDefault,
     fontSize: 20,
   },
   answerItem: {
@@ -98,27 +98,27 @@ const styles = StyleSheet.create({
   answerIndex: {
     flexDirection: 'column',
     alignItems: 'center',
-    color: colorBase.white.default,
+    color: colorBase.whiteDefault,
     fontStyle: 'italic',
     fontSize: 24,
     width: 42,
   },
   answer: {},
   answerItemText: {
-    color: colorBase.white.default,
+    color: colorBase.whiteDefault,
     fontStyle: 'italic',
     fontSize: 24,
     flex: 1,
   },
   answerItemScore: {
-    color: colorBase.white.default,
+    color: colorBase.whiteDefault,
     fontStyle: 'italic',
     fontSize: 24,
   },
   scoreInputTextValue: {
     textAlign: 'center',
     width: 100,
-    color: colorBase.white.default,
+    color: colorBase.whiteDefault,
     fontSize: 24,
   },
   addNewAnswer: {
@@ -144,6 +144,6 @@ const styles = StyleSheet.create({
     width: 2,
     marginHorizontal: 12,
     borderWidth: 2,
-    borderColor: colorBase.blue.pastel,
+    borderColor: colorBase.bluePastel,
   },
 });

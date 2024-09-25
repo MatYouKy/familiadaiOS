@@ -11,25 +11,22 @@ interface SnackbarProps {
   snackbarAction: ISnackbar;
 }
 
-const Snackbar: React.FC<SnackbarProps> = ({
-  snackbarAction,
-}) => {
+const Snackbar: React.FC<SnackbarProps> = ({ snackbarAction }) => {
   const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
 
-  const snackbarHideAfter = snackbarAction.snackbarHideAfter ? snackbarAction.snackbarHideAfter * 1000 : 3000
+  const snackbarHideAfter = snackbarAction.snackbarHideAfter
+    ? snackbarAction.snackbarHideAfter * 1000
+    : 3000;
 
   useEffect(() => {
     if (snackbarAction.message) {
       setVisible(true);
 
-      const timer = setTimeout(
-        () => {
-          setVisible(false);
-          dispatch(resetSnackbar());
-        },
-        snackbarHideAfter
-      );
+      const timer = setTimeout(() => {
+        setVisible(false);
+        dispatch(resetSnackbar());
+      }, snackbarHideAfter);
 
       return () => clearTimeout(timer);
     }
@@ -44,18 +41,18 @@ const Snackbar: React.FC<SnackbarProps> = ({
     switch (snackbarAction.status) {
       case 'SUCCESS':
         return {
-          backgroundColor: colorBase.success.main,
-          borderColor: colorBase.success.dark,
+          backgroundColor: colorBase.successMain,
+          borderColor: colorBase.successDark,
         };
       case 'EDIT':
         return {
-          backgroundColor: colorBase.blue.pastel,
-          borderColor: colorBase.blue.dark,
+          backgroundColor: colorBase.bluePastel,
+          borderColor: colorBase.blueDark,
         };
       case 'ERROR':
         return {
-          backgroundColor: colorBase.red.dark,
-          borderColor: colorBase.red.light,
+          backgroundColor: colorBase.redDark,
+          borderColor: colorBase.redLight,
         };
       default:
         return {
@@ -94,7 +91,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     zIndex: 10,
     borderWidth: 2,
-    shadowColor: colorBase.background.dark,
+    shadowColor: colorBase.backgroundDark,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
@@ -103,7 +100,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     letterSpacing: 1,
     fontWeight: '600',
-    color: colorBase.white.default,
+    color: colorBase.whiteDefault,
   },
 });
 

@@ -31,15 +31,12 @@ export const GameBoard = ({ handleRefresh }: { handleRefresh: () => void }) => {
     roundNumber,
   } = useAppSelector((state) => state.gameState);
 
-  const { gameProgress } =  useAppSelector((state) => state.globalState)
+  const { gameProgress } = useAppSelector((state) => state.globalState);
 
   const [openBackModal, setOpenBackModal] = useState(false);
   const [openSwapModal, setOpenSwapModal] = useState(false);
 
   const dispatch = useAppDispatch();
-
-  // const canUndo = useAppSelector((state) => state.gameState.past.length > 0);
-  // const canRedo = useAppSelector((state) => state.gameState.future.length > 0);
 
   const undoAction = () => {
     dispatch(UndoActionCreators.undo());
@@ -117,6 +114,7 @@ export const GameBoard = ({ handleRefresh }: { handleRefresh: () => void }) => {
             <ActionButton
               onPress={handleNextRound}
               title="Następna runda"
+              backgroundColor="whiteDefault"
               color="backgroundMain"
             />
           )}
@@ -124,6 +122,7 @@ export const GameBoard = ({ handleRefresh }: { handleRefresh: () => void }) => {
             <ActionButton
               onPress={handleEndGame}
               title="Koniec Gry!"
+              backgroundColor="whiteDefault"
               color="backgroundMain"
             />
           )}
@@ -138,24 +137,26 @@ export const GameBoard = ({ handleRefresh }: { handleRefresh: () => void }) => {
               optionalText="zmiana stron"
             />
           </View>
-          {gameProgress && <View style={styles.undoRendoActionContainer}>
-            <IconButton
-              onPress={undoAction}
-              action="UNDO"
-              color="mainGold"
-              size="x-large"
-              optionalText="cofnij"
-              // disabled={!canUndo}
-            />
-            <IconButton
-              onPress={redoAction}
-              action="REDO"
-              color="mainGold"
-              size="x-large"
-              optionalText="naprzód"
-              // disabled={!canRedo}
-            />
-          </View>}
+          {gameProgress && (
+            <View style={styles.undoRendoActionContainer}>
+              <IconButton
+                onPress={undoAction}
+                action="UNDO"
+                color="mainGold"
+                size="x-large"
+                optionalText="cofnij"
+                // disabled={!canUndo}
+              />
+              <IconButton
+                onPress={redoAction}
+                action="REDO"
+                color="mainGold"
+                size="x-large"
+                optionalText="naprzód"
+                // disabled={!canRedo}
+              />
+            </View>
+          )}
           <View style={styles.button}>
             <IconButton
               onPress={handleRefresh}
@@ -171,7 +172,7 @@ export const GameBoard = ({ handleRefresh }: { handleRefresh: () => void }) => {
           title="powrót"
           onPress={handleOpenModal}
           backgroundColor="redDark"
-          color="white"
+          color="whiteDefault"
         />
       </View>
       {openBackModal && (
@@ -231,7 +232,7 @@ const styles = StyleSheet.create({
   questionText: {
     letterSpacing: 2,
     fontSize: 20,
-    color: colorBase.white.default,
+    color: colorBase.whiteDefault,
     textTransform: 'uppercase',
   },
   list: {
@@ -250,13 +251,13 @@ const styles = StyleSheet.create({
   undoRendoActionContainer: {
     flex: 2,
     flexDirection: 'row',
-    justifyContent:'center'
+    justifyContent: 'center',
   },
   actionWithName: {
     alignItems: 'center',
     borderWidth: 1,
   },
   button: {
-    flex: 1
-  }
+    flex: 1,
+  },
 });

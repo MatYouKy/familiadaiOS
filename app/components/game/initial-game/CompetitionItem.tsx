@@ -45,7 +45,6 @@ export const CompetitionItem: FC<ICompetitionItem> = ({ competition }) => {
     dispatch(startGameTeam());
     dispatch(updateGameProgress('START'));
     dispatch(startCompetitionFunc(true));
-
   };
 
   const answersList = competition.questions.map((answer) => {
@@ -119,7 +118,7 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   listItemText: {
-    color: colorBase.white.default,
+    color: colorBase.whiteDefault,
   },
   showButton: {
     flexDirection: 'row',

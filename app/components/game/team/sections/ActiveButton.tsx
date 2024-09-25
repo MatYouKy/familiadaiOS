@@ -9,13 +9,15 @@ interface ICollectButton {
   handleIsActive: () => void;
 }
 
-export const ActiveButton: FC<ICollectButton> = ({
-  teamType,
-  handleIsActive,
-}) => {
+export const ActiveButton: FC<ICollectButton> = ({ teamType, handleIsActive }) => {
   return (
     <View style={styles[teamType]}>
-      <ActionButton color="white" backgroundColor='none' title="ACTIVE" onPress={handleIsActive} />
+      <ActionButton
+        color="whiteDefault"
+        backgroundColor="none"
+        title="ACTIVE"
+        onPress={handleIsActive}
+      />
     </View>
   );
 };
@@ -23,14 +25,14 @@ export const ActiveButton: FC<ICollectButton> = ({
 const styles = StyleSheet.create({
   BLUE: {
     borderWidth: 4,
-    borderColor: colorBase.blue.default,
-    backgroundColor: colorBase.blue.light,
+    borderColor: colorBase.whiteDefault,
+    backgroundColor: colorBase.blueLight,
     borderRadius: 50,
   },
   RED: {
     borderWidth: 4,
-    borderColor: colorBase.red.default,
-    backgroundColor: colorBase.red.shadow,
+    borderColor: colorBase.redDefault,
+    backgroundColor: colorBase.redShadow,
     borderRadius: 50,
   },
 });

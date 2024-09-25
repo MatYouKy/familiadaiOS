@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 24,
     shadowColor: '#000',
-    backgroundColor: colorBase.background.dark,
+    backgroundColor: colorBase.backgroundDark,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 4,
