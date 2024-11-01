@@ -46,6 +46,7 @@ const InitialGame = () => {
             title="Dodaj Nowe Pytanie"
             onPress={handleModalAction.bind(this, true)}
             size="x-small"
+            color="whiteDefault"
             backgroundColor="successLight"
           />
         </View>
@@ -53,6 +54,7 @@ const InitialGame = () => {
           title="Zaktualizuj listę pytań"
           onPress={getData}
           size="x-small"
+          color="whiteDefault"
           backgroundColor="blueDefault"
         />
       </View>

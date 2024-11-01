@@ -1,10 +1,12 @@
 import { useCallback } from 'react';
 import { TeamType } from '@__types/game.type';
 import {
+  blueFaultButtonDisabledFunc,
   blueTeamActive,
   blueTeamCollectButton,
   blueTeamExtraGame,
   clearFaultFunc,
+  redFaultButtonDisabledFunc,
   redTeamActive,
   redTeamCollectButton,
   redTeamExtraGame,
@@ -12,14 +14,19 @@ import {
   updateRedTeamChance,
 } from '@__store/slices/teamsState';
 import { useAppDispatch, useAppSelector } from '@__store/hooks';
-import { showNextBattleButtonFunc, updateGameStatus } from '@__store/slices/gameState';
+import {
+  boardBlockedFunc,
+  showNextBattleButtonFunc,
+  updateGameStatus,
+} from '@__store/slices/gameState';
 import useAnswerVisibilityChecks from './useAnswerVisibilityChecks';
 
 const useAddTeamFault = () => {
   const dispatch = useAppDispatch();
   const { currentQuestion, gameStatus } = useAppSelector((state) => state.gameState);
-  const { allVisible } = useAnswerVisibilityChecks(currentQuestion.answers);
-
+  const { allVisible, anyAnswerVisible } = useAnswerVisibilityChecks(
+    currentQuestion.answers
+  );
   const sessionActive = useAppSelector((state) => state.globalState.sessionActive);
 
   const { redTeam, blueTeam } = useAppSelector((state) => state.teams);
@@ -30,15 +37,52 @@ const useAddTeamFault = () => {
       const opposingTeam = teamType === 'BLUE' ? redTeam : blueTeam;
 
       if (gameStatus === 'BATTLE') {
-        if (currentTeam.fault.length < 1) {
-          dispatch(
-            teamType === 'BLUE'
-              ? updateBlueTeamChance({ fault: 'BATTLE' })
-              : updateRedTeamChance({ fault: 'BATTLE' })
-          );
+        if (!anyAnswerVisible) {
           if (opposingTeam.fault.length === 1) {
             dispatch(showNextBattleButtonFunc(true));
-            dispatch(updateGameStatus('BOARD-BLOCKED'));
+            dispatch(boardBlockedFunc(true));
+            dispatch(redFaultButtonDisabledFunc(true));
+            dispatch(blueFaultButtonDisabledFunc(true));
+          }
+
+          if (teamType === 'BLUE') {
+            if (blueTeam.fault.length < 1) {
+              dispatch(updateBlueTeamChance({ fault: 'BATTLE' }));
+              dispatch(blueFaultButtonDisabledFunc(true));
+            }
+          } else {
+            if (redTeam.fault.length < 1) {
+              dispatch(updateRedTeamChance({ fault: 'BATTLE' }));
+              dispatch(redFaultButtonDisabledFunc(true));
+            }
+          }
+        } else if (currentTeam.fault.length < 1) {
+          if (teamType === 'BLUE') {
+            dispatch(updateBlueTeamChance({ fault: 'BATTLE' }));
+            dispatch(redFaultButtonDisabledFunc(true));
+            dispatch(blueFaultButtonDisabledFunc(true));
+            dispatch(boardBlockedFunc(true));
+            const timeout = setTimeout(() => {
+              dispatch(redTeamActive(true));
+              dispatch(updateGameStatus('GAME'));
+              dispatch(redFaultButtonDisabledFunc(false));
+              dispatch(boardBlockedFunc(false));
+              dispatch(clearFaultFunc());
+            }, 3000);
+            return () => clearTimeout(timeout);
+          } else {
+            dispatch(updateRedTeamChance({ fault: 'BATTLE' }));
+            dispatch(redFaultButtonDisabledFunc(true));
+            dispatch(blueFaultButtonDisabledFunc(true));
+            dispatch(boardBlockedFunc(true));
+            const timeout = setTimeout(() => {
+              dispatch(blueTeamActive(true));
+              dispatch(updateGameStatus('GAME'));
+              dispatch(blueFaultButtonDisabledFunc(false));
+              dispatch(boardBlockedFunc(false));
+              dispatch(clearFaultFunc());
+            }, 3000);
+            return () => clearTimeout(timeout);
           }
         }
       } else if (gameStatus === 'GAME') {
@@ -55,6 +99,11 @@ const useAddTeamFault = () => {
           if (currentTeam.fault.length + 1 === 3) {
             dispatch(
               teamType === 'BLUE' ? redTeamExtraGame(true) : blueTeamExtraGame(true)
+            );
+            dispatch(
+              teamType === 'RED'
+                ? blueFaultButtonDisabledFunc(false)
+                : redFaultButtonDisabledFunc(false)
             );
             dispatch(updateGameStatus('EXTRA-GAME'));
           }
@@ -91,20 +140,20 @@ const useAddTeamFault = () => {
           );
         }
       } else if (gameStatus === 'EXTRA-GAME') {
-        if (teamType === 'RED' && redTeam.fault.length < 1) {
-          dispatch(updateRedTeamChance({ fault: 'BATTLE' }));
-          dispatch(blueTeamCollectButton(true));
-          dispatch(redTeamCollectButton(false));
-          dispatch(updateGameStatus('BOARD-BLOCKED'));
-        } else if (teamType === 'BLUE' && blueTeam.fault.length < 1) {
-          dispatch(updateBlueTeamChance({ fault: 'BATTLE' }));
-          dispatch(redTeamCollectButton(true));
-          dispatch(blueTeamCollectButton(false));
-          dispatch(updateGameStatus('BOARD-BLOCKED'));
+        if (opposingTeam.fault.length === 3) {
+          if (opposingTeam.teamType === 'BLUE') {
+            dispatch(blueTeamCollectButton(true));
+            dispatch(updateRedTeamChance({ fault: 'BATTLE' }));
+            dispatch(boardBlockedFunc(true));
+          } else {
+            dispatch(redTeamCollectButton(true));
+            dispatch(updateBlueTeamChance({ fault: 'BATTLE' }));
+            dispatch(boardBlockedFunc(true));
+          }
         }
       }
     },
-    [dispatch, gameStatus, sessionActive, redTeam, blueTeam, allVisible]
+    [dispatch, gameStatus, sessionActive, redTeam, blueTeam, allVisible, anyAnswerVisible]
   );
 
   return addTeamFault;

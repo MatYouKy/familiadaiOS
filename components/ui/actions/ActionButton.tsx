@@ -37,8 +37,8 @@ interface IActionButton {
 export const ActionButton: FC<IActionButton> = ({
   onPress,
   title,
-  backgroundColor = 'backgroundMain',
-  color = "whiteDefault",
+  backgroundColor = 'whiteDefault',
+  color = 'black',
   // variant = 'DEFAULT',
   size = 'medium',
   fullwidth = false,

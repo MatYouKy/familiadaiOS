@@ -40,7 +40,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 8,
     borderBottomColor: colorBase.mainGold,
     paddingVertical: 16,
-    backgroundColor: colorBase.backgroundMain,
   },
   faultContainer: {
     color: colorBase.mainGold,

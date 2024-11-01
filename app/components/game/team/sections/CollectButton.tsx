@@ -1,7 +1,8 @@
 import React, { FC } from 'react';
-import { Button, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { ITeam } from '@__types/game.type';
 import { colorBase } from '@__colors/colorBase';
+import { ActionButton } from '@__components/ui';
 
 interface ICollectButton {
   teamType: ITeam['teamType'];
@@ -11,9 +12,15 @@ interface ICollectButton {
 export const CollectButton: FC<ICollectButton> = ({ teamType, handleCollectScore }) => {
   return (
     <View style={styles[teamType]}>
-      <Button
-        color={colorBase.whiteDefault}
-        title="COLLECT"
+      <ActionButton
+        color="whiteDefault"
+        title="Zbierz Punkty"
+        backgroundColor="successDark"
+        textStyle={
+          {textTransform: 'uppercase', 
+            letterSpacing: 4
+          }
+        }
         onPress={handleCollectScore}
       />
     </View>
@@ -23,12 +30,12 @@ export const CollectButton: FC<ICollectButton> = ({ teamType, handleCollectScore
 const styles = StyleSheet.create({
   BLUE: {
     borderWidth: 2,
-    borderColor: colorBase.mainGold,
-    borderRadius: 50,
+    borderColor: colorBase.backgroundDark,
+    borderRadius: 8
   },
   RED: {
     borderWidth: 2,
-    borderColor: colorBase.whiteDefault,
-    borderRadius: 50,
+    borderColor: colorBase.redDark,
+    borderRadius: 8
   },
 });

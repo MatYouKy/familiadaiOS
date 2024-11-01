@@ -28,7 +28,7 @@ export interface IModalAction {
 
 
 export interface InputTextValidProps {
-  ipAddressValue: string;
+  value: string;
   isValid: boolean;
   isTouched?: boolean;
 }

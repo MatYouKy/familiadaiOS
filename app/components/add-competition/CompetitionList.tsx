@@ -20,12 +20,7 @@ export const CompetitionList: FC<ICompetitionList> = () => {
         }}
         data={questions}
         renderItem={(question) => {
-          return (
-            <QuestionItem
-              index={question.index + 1}
-              question={question.item}
-            />
-          );
+          return <QuestionItem index={question.index + 1} question={question.item} />;
         }}
       />
     </View>
