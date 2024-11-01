@@ -2,17 +2,22 @@ import React, { FC } from 'react';
 import { FlatList, StyleSheet, Text, Pressable, View } from 'react-native';
 import { IAnswer } from '@__types/game.type';
 import { colorBase } from '@__colors/colorBase';
-import useAnswerVisibility from 'app/hooks/useAnswerVisibility';
+import { useAppSelector } from '@__store/hooks';
+import useLogic from '../../../hooks/useLogic';
 
 interface IAnswerList {
   list: IAnswer[];
+  multiplier: number;
 }
 
-export const AnswerList: FC<IAnswerList> = ({ list }) => {
-  const { toggleAnswerVisibility } = useAnswerVisibility();
+export const AnswerList: FC<IAnswerList> = ({ list, multiplier }) => {
+  const { toggleAnswer, currentList } = useLogic(list, multiplier);
+  const { boardBlocked } = useAppSelector((state) => state.gameState);
 
   const handleAnswerItem = (id: string) => {
-    toggleAnswerVisibility(id);
+    if (!boardBlocked) {
+      toggleAnswer(id);
+    }
   };
 
   return (
@@ -21,7 +26,7 @@ export const AnswerList: FC<IAnswerList> = ({ list }) => {
       keyExtractor={(item) => {
         return item.id as string;
       }}
-      data={list}
+      data={currentList}
       renderItem={(answer) => {
         return (
           <Pressable
@@ -30,18 +35,28 @@ export const AnswerList: FC<IAnswerList> = ({ list }) => {
             }}
             onPress={handleAnswerItem.bind(this, answer.item.id)}
           >
+            {answer.item.isVisible && (
+              <View style={styles.lineThrough}>
+                <View style={styles.line}></View>
+              </View>
+            )}
             <View
               style={{
                 ...styles.listItem,
                 backgroundColor: answer.item.isVisible
                   ? '#001100'
-                  : colorBase.backgroundMain,
+                  : colorBase.backgroundDark,
+                borderColor: answer.item.isVisible
+                  ? colorBase.whiteShadow
+                  : colorBase.mainGold,
               }}
             >
               <Text
                 style={{
                   ...styles.listItemText,
-                  textDecorationLine: answer.item.isVisible ? 'line-through' : 'none',
+                  color: answer.item.isVisible
+                    ? colorBase.whiteShadow
+                    : colorBase.whiteDefault,
                 }}
               >
                 {answer.item.text}
@@ -49,7 +64,9 @@ export const AnswerList: FC<IAnswerList> = ({ list }) => {
               <Text
                 style={{
                   ...styles.listItemText,
-                  textDecorationLine: answer.item.isVisible ? 'line-through' : 'none',
+                  color: answer.item.isVisible
+                    ? colorBase.whiteShadow
+                    : colorBase.whiteDefault,
                 }}
               >
                 {answer.item.score}
@@ -67,6 +84,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   listItem: {
+    position: 'relative',
     borderRadius: 16,
     overflow: 'hidden',
     borderWidth: 2,
@@ -80,11 +98,28 @@ const styles = StyleSheet.create({
   listItemText: {
     textTransform: 'uppercase',
     letterSpacing: 2,
-    color: colorBase.whiteDefault,
     padding: 16,
     fontSize: 24,
   },
   pressedItem: {
     opacity: 0.1,
+  },
+  lineThrough: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 20,
+    padding: 20,
+  },
+  line: {
+    position: 'relative',
+    width: '100%',
+    height: 1,
+    backgroundColor: colorBase.whiteDefault,
+    zIndex: 21,
   },
 });

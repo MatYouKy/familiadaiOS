@@ -11,6 +11,7 @@ import { blueTeamCollectButton, redTeamCollectButton } from '@__store/slices/tea
 const useAnswerVisibility = () => {
   const dispatch = useAppDispatch();
   useBattleLogic();
+  
   const { currentQuestion, score, gameStatus } = useAppSelector(
     (state) => state.gameState
   );

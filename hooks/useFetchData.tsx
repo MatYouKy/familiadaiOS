@@ -25,38 +25,35 @@ const useFetchData = (): UseFetchDataReturn => {
 
   const getData = useCallback(() => {
     setIsLoading(true);
-    const timeout = setTimeout(() => {
-      fetch(`http://${ipAddress}:2020/questions`)
-        .then((response) => response.json())
-        .then((data: ICompetitions) => {
-          
-          if (data && data.competitions) {
-            if (
-              JSON.stringify(data.competitions) !== JSON.stringify(previousCompetitions)
-            ) {
-              setPreviousCompetitions(data.competitions);
-              dispatch(setCompetitionList(data.competitions));
-              dispatch(
-                snackbarActionFunc({
-                  message: 'Pytania zostały pobrane',
-                  status: 'SUCCESS',
-                })
-              );
-            }
+
+    fetch(`http://${ipAddress}:2020/questions`)
+      .then((response) => response.json())
+      .then((data: ICompetitions) => {
+        if (data && data.competitions) {
+          if (
+            JSON.stringify(data.competitions) !== JSON.stringify(previousCompetitions)
+          ) {
+            setPreviousCompetitions(data.competitions);
+            dispatch(setCompetitionList(data.competitions));
+            dispatch(
+              snackbarActionFunc({
+                message: 'Pytania zostały pobrane',
+                status: 'SUCCESS',
+              })
+            );
           }
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          setIsLoading(false);
-          dispatch(
-            snackbarActionFunc({
-              message: `Error fetching data: ${error}`,
-              status: 'ERROR',
-            })
-          );
-        });
-    }, 1000);
-    return () => clearTimeout(timeout);
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        dispatch(
+          snackbarActionFunc({
+            message: `Error fetching data: ${error}`,
+            status: 'ERROR',
+          })
+        );
+      });
   }, [ipAddress, previousCompetitions]);
 
   const sendData = useCallback(
@@ -154,46 +151,55 @@ const useFetchData = (): UseFetchDataReturn => {
     [ipAddress]
   );
 
-  const deleteData = useCallback(
-    (itemId: string) => {
-      fetch(`http://${ipAddress}:2020/competitions/${itemId}`, {
+const deleteData = useCallback(
+  async (itemId: string): Promise<{ success: boolean; message: string }> => {
+    try {
+      const response = await fetch(`http://${ipAddress}:2020/competitions/${itemId}`, {
         method: 'DELETE',
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
-        .then((data: { message: string; status: SnackbarStatus }) => {
-          if (data && data.message === 'Competition deleted successfully') {
-            dispatch(deleteCompetitionFunc(itemId));
-            dispatch(
-              snackbarActionFunc({
-                message: data.message,
-                status: data.status,
-              })
-            );
-          } else {
-            dispatch(
-              snackbarActionFunc({
-                message: `Unexpected delete response: ${data}`,
-                status: 'ERROR',
-              })
-            );
-          }
-        })
-        .catch((error) =>
-          dispatch(
-            snackbarActionFunc({
-              message: `Error deleting competition: ${error}`,
-              status: 'ERROR',
-            })
-          )
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+
+      if (data && data.message === 'Konkurencja została pomyślnie usunięta') {
+        dispatch(deleteCompetitionFunc(itemId));
+        dispatch(
+          snackbarActionFunc({
+            message: data.message,
+            status: data.status,
+          })
         );
-    },
-    [ipAddress]
-  );
+        return { success: true, message: data.message };
+      } else {
+        const errorMessage = `Unexpected delete response: ${JSON.stringify(data)}`;
+        dispatch(
+          snackbarActionFunc({
+            message: errorMessage,
+            status: 'ERROR',
+          })
+        );
+        return { success: false, message: errorMessage };
+      }
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'An unexpected error occurred';
+      dispatch(
+        snackbarActionFunc({
+          message: `Error deleting competition: ${errorMessage}`,
+          status: 'ERROR',
+        })
+      );
+      return { success: false, message: errorMessage };
+    }
+  },
+  [ipAddress]
+);
+
+
+
 
   return { sendData, editData, deleteData, getData, isLoading };
 };

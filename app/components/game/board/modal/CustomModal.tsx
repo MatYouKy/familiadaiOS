@@ -37,7 +37,7 @@ export const CustomModal: FC<IRestartSessionModal> = ({
               <ActionButton
                 onPress={leftButtonOnPress}
                 title={leftButtonLabel}
-                color="white"
+                color="whiteDefault"
                 backgroundColor={warringModal ? 'redDefault' : 'black'}
               />
             </View>
@@ -49,7 +49,7 @@ export const CustomModal: FC<IRestartSessionModal> = ({
               <ActionButton
                 onPress={rigntButtonOnPress}
                 title={rigntButtonLabel}
-                color="white"
+                color="whiteDefault"
                 backgroundColor={warringModal ? 'bluePastel' : 'black'}
               />
             </View>

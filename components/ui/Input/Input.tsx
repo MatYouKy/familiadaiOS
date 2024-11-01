@@ -31,7 +31,7 @@ export const Input = forwardRef<TextInput, IInput>(
       label,
       errorText = '',
       isError,
-      colorVariant = 'black',
+      colorVariant = 'whiteDefault',
       direction = 'column',
       size = 'medium',
       variant,

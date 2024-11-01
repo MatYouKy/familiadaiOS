@@ -62,14 +62,7 @@ RNSVGSvgViewAndroidProps::RNSVGSvgViewAndroidProps(
     borderBottomRightRadius(convertRawProp(context, rawProps, "borderBottomRightRadius", sourceProps.borderBottomRightRadius, {0.0})),
     borderRadius(convertRawProp(context, rawProps, "borderRadius", sourceProps.borderRadius, {0.0})),
     borderBottomLeftRadius(convertRawProp(context, rawProps, "borderBottomLeftRadius", sourceProps.borderBottomLeftRadius, {0.0})),
-    borderTopLeftRadius(convertRawProp(context, rawProps, "borderTopLeftRadius", sourceProps.borderTopLeftRadius, {0.0})),
-    borderBlockColor(convertRawProp(context, rawProps, "borderBlockColor", sourceProps.borderBlockColor, {})),
-    borderBlockEndColor(convertRawProp(context, rawProps, "borderBlockEndColor", sourceProps.borderBlockEndColor, {})),
-    borderBlockStartColor(convertRawProp(context, rawProps, "borderBlockStartColor", sourceProps.borderBlockStartColor, {})),
-    borderEndEndRadius(convertRawProp(context, rawProps, "borderEndEndRadius", sourceProps.borderEndEndRadius, {0.0})),
-    borderEndStartRadius(convertRawProp(context, rawProps, "borderEndStartRadius", sourceProps.borderEndStartRadius, {0.0})),
-    borderStartEndRadius(convertRawProp(context, rawProps, "borderStartEndRadius", sourceProps.borderStartEndRadius, {0.0})),
-    borderStartStartRadius(convertRawProp(context, rawProps, "borderStartStartRadius", sourceProps.borderStartStartRadius, {0.0}))
+    borderTopLeftRadius(convertRawProp(context, rawProps, "borderTopLeftRadius", sourceProps.borderTopLeftRadius, {0.0}))
       {}
 RNSVGCircleProps::RNSVGCircleProps(
     const PropsParserContext &context,

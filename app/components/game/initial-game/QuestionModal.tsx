@@ -65,12 +65,14 @@ export const QuestionModal: FC<IQuestionModal> = ({
             title="Zamknij"
             onPress={() => closeModal(false)}
             size="small"
+            color="whiteDefault"
             backgroundColor="redDefault"
           />
           <ActionButton
             title="Zagraj"
             onPress={addQuestionForGame}
             size="small"
+            color="whiteDefault"
             backgroundColor="successLight"
           />
         </View>

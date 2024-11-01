@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { FC, useState } from 'react';
-import { Modal, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Modal, StyleSheet, Text, View } from 'react-native';
 import { colorBase } from '@__colors/colorBase';
 import { TeamType } from '@__types/game.type';
 import { useAppDispatch, useAppSelector } from '@__store/hooks';
 import { changeBlueTeamName, changeRedTeamName } from '@__store/slices/teamsState';
-import { ActionButton } from '@__components/ui';
+import { ActionButton, Input } from '@__components/ui';
 
 interface INameModal {
   isOpen: boolean;
@@ -63,13 +63,24 @@ export const NameModal: FC<INameModal> = ({ isOpen, closeModal, teamType }) => {
           }}
         >
           <Text style={styles.inputHeading}>{teamVarriable.heading}</Text>
-          <TextInput
-            style={styles.inputForm}
-            value={teamName}
-            onChangeText={handleChangeName}
-            onSubmitEditing={changeName}
-            onKeyPress={handleKeyPress}
-          ></TextInput>
+          <Input
+            minWidth={450}
+            size="x-large"
+            direction="row"
+            variant="outlined"
+            colorVariant={teamType === 'BLUE' ? 'blueDefault' : 'redDefault'}
+            errorText="Podaj prawidłowy adres IP"
+            inputProps={{
+              onChangeText: handleChangeName,
+              onKeyPress: handleKeyPress,
+              placeholder: 'Wpisz Adres IP',
+              textAlign: 'center',
+              maxLength: 15,
+              value: teamName,
+              autoFocus: true,
+              autoCorrect: false,
+            }}
+          />
           <View
             style={{
               ...styles.buttonWrapper,
@@ -106,7 +117,7 @@ export const NameModal: FC<INameModal> = ({ isOpen, closeModal, teamType }) => {
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    backgroundColor: colorBase.backgroundMain,
+    backgroundColor: colorBase.backgroundDark,
     padding: 24,
     justifyContent: 'center',
     alignItems: 'center',

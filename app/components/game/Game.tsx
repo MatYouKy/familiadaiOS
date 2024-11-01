@@ -3,36 +3,46 @@ import React, { FC, useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '@__store/hooks';
 import InitialGame from './initial-game/InitialGame';
 import { StartGame } from './start-game/StartGame';
+import WifiManager from 'react-native-wifi-reborn';
 
 import {
-  // resetStations,
+  resetStations,
   resetTeams,
   startGameTeam,
-  // stationBlueActive,
-  // stationRedActive,
+  stationBlueActive,
+  stationRedActive,
 } from '@__store/slices/teamsState';
 import { initialStateFunc } from '@__store/slices/gameState';
 import useQuestionState from '@__hooks/useQuestionState';
 import { EndGame } from './end-game/EndGame';
 import {
   ConnectType,
+  ITeam,
   IWebSocketMessage,
   WebsocketBoard,
   WebsocketTeam,
 } from '@__types/game.type';
 import GameLayout from './GameLayout';
-// import usePulpitSocket from '@__hooks/usePulpitSocket';
+import { DevicesType } from '@__types/connect.type';
+import { snackbarActionFunc } from '@__store/slices/snackbarSlice';
+import { useCustomWebsocket } from '@__hooks/useCustomWebsocket';
+import { desktopActiveActionFunc, pulpitActiveActionFunc } from '@__store/slices/devicesStateSlice';
 
 interface IGame {
   sendWebSocketMessage: (message: any) => void;
   websocketMessage?: IWebSocketMessage['payload'] | null;
   webSocketStatus: ConnectType;
+  connectedDevices: {
+    id: string;
+    type: DevicesType;
+  }[];
 }
 export const Game: FC<IGame> = ({
   sendWebSocketMessage: sendMessage,
   webSocketStatus: status,
+  connectedDevices,
 }) => {
-  const gameProgress = useAppSelector((state) => state.globalState.gameProgress);
+  const { gameProgress } = useAppSelector((state) => state.globalState);
   const gameState = useAppSelector((state) => state.gameState);
   const { blueTeam, redTeam } = useAppSelector((state) => state.teams);
 
@@ -41,37 +51,31 @@ export const Game: FC<IGame> = ({
 
   const { initializeQuestion } = useQuestionState();
 
-  const gameDataRef = useRef({
+  const teamsDataRef = useRef<{ redTeam: ITeam; blueTeam: ITeam }>({
     redTeam,
     blueTeam,
-    board: {
-      answers: gameState.currentQuestion.answers,
-      question: gameState.currentQuestion.question,
-      score: gameState.score,
-      roundNumber: gameState.roundNumber,
-      gameProgress: gameProgress,
-      gameStatus: gameState.gameStatus,
-      introMusic: gameState.introMusic,
-      stationActive: gameState.startCompetition,
-    },
   });
 
   useEffect(() => {
-    console.log('testowy effekt');
-    gameDataRef.current = {
-      ...gameDataRef.current,
-      board: {
-        ...gameDataRef.current.board,
-        answers: gameState.currentQuestion.answers,
-      },
+    teamsDataRef.current = {
+      ...teamsDataRef.current,
       blueTeam,
       redTeam,
     };
-  }, [status, blueTeam, redTeam, gameState.currentQuestion.answers]);
+  }, [status, blueTeam, redTeam, gameState]);
+
+  useEffect(() => {
+    handleRefresh();
+  }, [connectedDevices]);
+
+  useEffect(() => {
+    const isDesktopActive = connectedDevices.some(
+      (device) => device.type === 'GAME-BOARD'
+    );
+    dispatch(desktopActiveActionFunc(isDesktopActive));
+  }, [connectedDevices]);
 
   const dispatch = useAppDispatch();
-
-  // const { status: status2, message } = usePulpitSocket();
 
   const handleRefresh = () => {
     if (status === 'success') {
@@ -91,7 +95,7 @@ export const Game: FC<IGame> = ({
           teamType: 'BLUE',
           totalScore: blueTeam.totalScore,
           name: blueTeam.name,
-          fault: gameDataRef.current.blueTeam.fault,
+          fault: teamsDataRef.current.blueTeam.fault,
           stationActive: blueTeam.stationActive,
         },
       };
@@ -115,77 +119,124 @@ export const Game: FC<IGame> = ({
     }
   };
 
-  // useEffect(() => {
-  //   const newMessage = message as unknown as { blueButton: boolean; redButton: boolean };
+  const { webSocketStatus, connectWebSocket, buttonState } = useCustomWebsocket(
+    'PULPIT',
+    '192.168.0.26',
+    82
+  );
 
-  //   if (status2 === 'success' && newMessage) {
-  //     if (newMessage.blueButton) {
-  //       dispatch(stationBlueActive(true));
-  //     } else {
-  //       dispatch(stationBlueActive(false));
-  //     }
+  useEffect(() => {
+    const checkSSIDAndConnect = async () => {
+      try {
+        const currentSSID = await WifiManager.getCurrentWifiSSID();
+        if (currentSSID === 'FAMILIADA') {
+          dispatch(
+            snackbarActionFunc({
+              message: 'Correct SSID detected, connecting WebSocket...',
+              status: 'SUCCESS',
+            })
+          );
+          connectWebSocket();
+          dispatch(pulpitActiveActionFunc(true));
+        } else {
+          dispatch(
+            snackbarActionFunc({
+              message: 'Not connected to FAMILIADA network. WebSocket not connected.',
+              status: 'ERROR',
+            })
+          );
+          dispatch(pulpitActiveActionFunc(false));
+        }
+      } catch (error) {
+        dispatch(pulpitActiveActionFunc(false));
+      }
+    };
+    checkSSIDAndConnect();
+  }, [connectWebSocket]);
 
-  //     if (newMessage.redButton) {
-  //       dispatch(stationRedActive(true));
-  //     } else {
-  //       dispatch(stationRedActive(false));
-  //     }
+  useEffect(() => {
+    if (webSocketStatus === 'success') {
+      if (buttonState.blueButton) {
+        dispatch(stationBlueActive(true));
+      } else {
+        dispatch(stationBlueActive(false));
+      }
 
-  //     if (!newMessage.blueButton && !newMessage.redButton) {
-  //       dispatch(resetStations());
-  //     }
-  //   }
+      if (buttonState.redButton) {
+        dispatch(stationRedActive(true));
+      } else {
+        dispatch(stationRedActive(false));
+      }
 
-  //   if (status2 === 'error') {
-  //     dispatch(
-  //       snackbarActionFunc({
-  //         status: 'ERROR',
-  //         message: 'Utracono połączenie ze stanowiskiem do Familiady',
-  //       })
-  //     );
-  //   }
-  // }, [message, status2, dispatch]);
+      if (!buttonState.blueButton && !buttonState.redButton) {
+        dispatch(resetStations());
+      }
+    }
+
+    if (webSocketStatus === 'error') {
+      dispatch(
+        snackbarActionFunc({
+          status: 'ERROR',
+          message: 'Utracono połączenie ze stanowiskiem do Familiady',
+        })
+      );
+    }
+  }, [buttonState, webSocketStatus, dispatch, gameState, roundNumber]);
 
   useEffect(() => {
     const sendTeam: WebsocketTeam = {
       type: 'red-team',
       payload: {
         teamType: 'RED',
-        totalScore: gameDataRef.current.redTeam.totalScore,
-        name: gameDataRef.current.redTeam.name,
-        fault: gameDataRef.current.redTeam.fault,
-        stationActive: gameDataRef.current.redTeam.stationActive,
+        totalScore: teamsDataRef.current.redTeam.totalScore,
+        name: redTeam.name,
+        fault: teamsDataRef.current.redTeam.fault,
+        stationActive: teamsDataRef.current.redTeam.stationActive,
       },
     };
 
     if (status === 'success') {
       sendMessage(sendTeam);
     }
-  }, [status, redTeam, sendMessage]);
+  }, [
+    status,
+    redTeam,
+    sendMessage,
+    teamsDataRef.current.redTeam.fault,
+    gameState,
+    roundNumber,
+  ]);
 
   useEffect(() => {
     const sendTeam: WebsocketTeam = {
       type: 'blue-team',
       payload: {
         teamType: 'BLUE',
-        totalScore: gameDataRef.current.blueTeam.totalScore,
-        name: gameDataRef.current.blueTeam.name,
-        fault: gameDataRef.current.blueTeam.fault,
-        stationActive: gameDataRef.current.blueTeam.stationActive,
+        totalScore: teamsDataRef.current.blueTeam.totalScore,
+        name: teamsDataRef.current.blueTeam.name,
+        fault: teamsDataRef.current.blueTeam.fault,
+        stationActive: teamsDataRef.current.blueTeam.stationActive,
       },
     };
 
     if (status === 'success') {
-      console.log('sendMessage(blue-team)', sendTeam);
       sendMessage(sendTeam);
     }
-  }, [status, blueTeam, sendMessage, gameState]);
+  }, [
+    status,
+    blueTeam,
+    sendMessage,
+    gameState,
+    teamsDataRef.current.blueTeam.fault,
+    gameState,
+    roundNumber,
+  ]);
 
   useEffect(() => {
     const sendBoard: WebsocketBoard = {
       type: 'board',
       payload: {
-        answers: gameDataRef.current.board.answers,
+        answers: gameState.currentQuestion.answers,
         question: gameState.currentQuestion.question,
         score: gameState.score,
         roundNumber: gameState.roundNumber,

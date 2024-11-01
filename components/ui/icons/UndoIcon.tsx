@@ -4,7 +4,7 @@ import React, { FC } from 'react';
 import Svg, { Path } from 'react-native-svg';
 
 export const UndoIcon: FC<CustomSVGIntrface> = ({
-  color = 'white',
+  color = 'whiteDefault',
   fill = 'none',
   width = 24,
   height = 24,

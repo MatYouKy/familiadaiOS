@@ -17,6 +17,7 @@ const initialState: IBoard = {
   showEndGameButton: false,
   introMusic: false,
   startCompetition: false,
+  boardBlocked: false,
 };
 
 const gameSlice = createSlice({
@@ -40,6 +41,9 @@ const gameSlice = createSlice({
     },
     showEndGameButtonFunc: (state, action: PayloadAction<boolean>) => {
       state.showEndGameButton = action.payload;
+    },
+    boardBlockedFunc: (state, action: PayloadAction<boolean>) => {
+      state.boardBlocked = action.payload;
     },
     nextQuestion: (state) => {
       state.roundNumber += 1;
@@ -67,6 +71,7 @@ export const {
   showEndGameButtonFunc,
   introMusicFunc,
   startCompetitionFunc,
+  boardBlockedFunc,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

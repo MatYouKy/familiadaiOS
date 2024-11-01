@@ -162,13 +162,6 @@ class RNSVGSvgViewAndroidProps final : public ViewProps {
   double borderRadius{0.0};
   double borderBottomLeftRadius{0.0};
   double borderTopLeftRadius{0.0};
-  SharedColor borderBlockColor{};
-  SharedColor borderBlockEndColor{};
-  SharedColor borderBlockStartColor{};
-  double borderEndEndRadius{0.0};
-  double borderEndStartRadius{0.0};
-  double borderStartEndRadius{0.0};
-  double borderStartStartRadius{0.0};
 };
 
 struct RNSVGCircleFillStruct {

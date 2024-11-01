@@ -6,13 +6,16 @@ import { CustomModal } from './modal/CustomModal';
 import { useAppDispatch, useAppSelector } from '@__store/hooks';
 import { ActionCreators as UndoActionCreators } from 'redux-undo';
 import {
+  blueFaultButtonDisabledFunc,
   clearFaultFunc,
   nextRoundReset,
+  redFaultButtonDisabledFunc,
   resetTeams,
   swapTeamFunc,
 } from '@__store/slices/teamsState';
 import { colorBase } from '@__colors/colorBase';
 import {
+  boardBlockedFunc,
   nextQuestion,
   showNextBattleButtonFunc,
   showNextRoundButtonFunc,
@@ -68,7 +71,9 @@ export const GameBoard = ({ handleRefresh }: { handleRefresh: () => void }) => {
 
   const handleNextBattle = () => {
     dispatch(showNextBattleButtonFunc(false));
-    // dispatch(resetTeams());
+    dispatch(dispatch(boardBlockedFunc(false)));
+    dispatch(redFaultButtonDisabledFunc(false));
+    dispatch(blueFaultButtonDisabledFunc(false));
     dispatch(updateGameStatus('BATTLE'));
     dispatch(clearFaultFunc());
   };
@@ -83,8 +88,8 @@ export const GameBoard = ({ handleRefresh }: { handleRefresh: () => void }) => {
     dispatch(nextQuestion());
     dispatch(resetTeams());
     dispatch(updateGameStatus('BATTLE'));
+    dispatch(boardBlockedFunc(false));
     dispatch(showNextRoundButtonFunc(false));
-    // dispatch(clearFaultFunc());
   };
 
   return (
@@ -96,7 +101,10 @@ export const GameBoard = ({ handleRefresh }: { handleRefresh: () => void }) => {
         <Text style={styles.questionText}>{currentQuestion.question}</Text>
       </View>
       <View style={styles.list}>
-        <AnswerList list={currentQuestion.answers} />
+        <AnswerList
+          list={currentQuestion.answers}
+          multiplier={currentQuestion.multiplier}
+        />
       </View>
 
       <View style={styles.bottomSection}>
@@ -227,7 +235,7 @@ const styles = StyleSheet.create({
   bottomSection: {
     alignItems: 'center',
     gap: 12,
-    marginBottom: 64,
+    marginBottom: 24,
   },
   questionText: {
     letterSpacing: 2,

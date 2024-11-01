@@ -6,6 +6,7 @@ import gameState from './slices/gameState';
 import webSocketSlice from './slices/webSocketSlice';
 import competitions from './slices/competitionsStateSlice';
 import snackbarAction from './slices/snackbarSlice';
+import connectedDevices from './slices/devicesStateSlice';
 
 const rootReducer = combineReducers({
   globalState,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   webSocketSlice,
   competitions,
   snackbarAction,
+  connectedDevices
 });
 
 export default rootReducer;

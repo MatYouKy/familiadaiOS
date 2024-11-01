@@ -60,7 +60,8 @@ const styles = StyleSheet.create({
   gameContainer: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#343434',
+    borderTopWidth: 2,
+    borderTopColor: colorBase.mainGold,
   },
   redTeam: {
     width: 300,

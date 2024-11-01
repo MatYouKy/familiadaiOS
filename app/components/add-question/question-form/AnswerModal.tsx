@@ -89,6 +89,8 @@ export const AnswerModal: FC<IAnswerModal> = ({
               onChangeText: (text) => handleTextChange('text', text),
               value: answer.text,
             }}
+            variant="underline"
+            colorVariant="bluePastel"
             isError={isError}
             errorText={`Odpowiedź musi mieć co najmniej ${minTextLength} znaki.`}
           />
@@ -108,7 +110,7 @@ export const AnswerModal: FC<IAnswerModal> = ({
             <ActionButton
               onPress={onClose}
               title="Anuluj"
-              size="x-small"
+              size="small"
               color="blueDark"
             />
             <ActionButton
@@ -118,8 +120,9 @@ export const AnswerModal: FC<IAnswerModal> = ({
                   : answerHandler
               }
               title={editMode ? 'Zmień' : 'Dodaj'}
-              size="x-small"
-              color="blueDark"
+              size="medium"
+              backgroundColor="blueDark"
+              color="whiteDefault"
               disabled={isFormInvalid}
             />
           </View>

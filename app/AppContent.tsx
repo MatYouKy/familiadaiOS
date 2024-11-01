@@ -7,6 +7,7 @@ import { Game } from './components/game/Game';
 import Snackbar from '@__components/ui/snackbar/Snackbar';
 import { Loader, LoaderModal } from '@__components/ui/loader/Loader';
 import useIpConnection from '@__hooks/useIpConnection';
+import { Navbar } from './components/Navbar/Navbar';
 
 export const AppContent = () => {
   const snackbarAction = useAppSelector((state) => state.snackbarAction);
@@ -22,18 +23,26 @@ export const AppContent = () => {
     websocketMessage,
     webSocketStatus,
     restoreCounter,
+    connectedDevices
   } = useIpConnection();
 
   useLayoutEffect(() => {
     handleFirstStart(true);
   }, []);
 
+  const attempts = 120;
+
+  const restoreModalConditional =
+    !connection && restoreCounter && restoreCounter < attempts;
+
   return (
     <View style={styles.appContainer}>
+      <Navbar />
       <Game
         sendWebSocketMessage={sendWebSocketMessage}
         websocketMessage={websocketMessage}
         webSocketStatus={webSocketStatus}
+        connectedDevices={connectedDevices}
       />
       <LoaderModal
         size="large"
@@ -41,11 +50,11 @@ export const AppContent = () => {
         modalIsOpen={isLoading || (connection && status === 'pending')}
         transparent
       />
-      {!connection && restoreCounter ? (
-        <Modal visible={!connection && !!restoreCounter}>
+      {restoreModalConditional ? (
+        <Modal visible={restoreModalConditional}>
           <View style={styles.modalWrapper}>
             <Text style={styles.restoreCounterText}>
-              Następuje {restoreCounter} próba przywrócenia połączenia ze 120 prób!
+              Następuje {restoreCounter} próba przywrócenia połączenia ze {attempts} prób!
             </Text>
             <Loader color="mainGold" size="large" />
           </View>
@@ -70,7 +79,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colorBase.backgroundMain,
+    backgroundColor: colorBase.backgroundDark,
   },
   restoreCounterText: {
     color: colorBase.whiteDefault,
@@ -81,7 +90,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colorBase.backgroundMain,
     gap: 24,
   },
 });

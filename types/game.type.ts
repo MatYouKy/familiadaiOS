@@ -9,7 +9,6 @@ export type GameStatus =
   | 'GAME'
   | 'SUMMARY-GAME'
   | 'BOARD-BLOCKED'
-  | 'BATTLE-BOARD-BLOCKED'
   | 'EXTRA-GAME'
   | 'NEXT-ROUND'
   | 'END-GAME';
@@ -111,8 +110,6 @@ export interface IGame {
   sessionActive: boolean;
 }
 
-
-
 export interface ICompetitions {
   competitions: ICompetition[];
 }
@@ -135,6 +132,7 @@ export type IBoard = Omit<
   showEndGameButton: boolean;
   introMusic: boolean;
   startCompetition: boolean;
+  boardBlocked?: boolean;
 };
 
 export interface IPulpit {

@@ -5,3 +5,14 @@ export const validateIpAddress = (ipAddress: string) => {
 
   return ipRegex.test(ipAddress);
 };
+
+export const validateMinLength =
+  (minLength: number) =>
+  (value: string): boolean => {
+    return value.length >= minLength;
+  };
+
+export const validateOnlyDigits = (value: string): boolean => {
+  const digitsRegex = /^\d+$/;
+  return digitsRegex.test(value);
+};

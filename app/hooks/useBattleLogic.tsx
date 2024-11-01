@@ -14,6 +14,7 @@ import {
 import { useAppDispatch, useAppSelector } from '@__store/hooks';
 import useAnswerVisibilityChecks from './useAnswerVisibilityChecks';
 import {
+  boardBlockedFunc,
   showEndGameButtonFunc,
   showNextRoundButtonFunc,
   updateGameStatus,
@@ -26,37 +27,10 @@ const useBattleLogic = () => {
     (state) => state.gameState
   );
   const { questions } = useAppSelector((state) => state.globalState);
-  const {
-    firstAnswerVisibleAndOthersNot,
-    twoAnswersVisible,
-    anyAnswerVisible,
-    allVisible,
-  } = useAnswerVisibilityChecks(currentQuestion.answers);
 
   useEffect(() => {
     if (gameStatus === 'BATTLE') {
-      if (firstAnswerVisibleAndOthersNot) {
-        if (blueTeam.fault.length && !redTeam.isActive) {
-          // const timeout = setTimeout(() => {
-          dispatch(redTeamActive(true));
-          dispatch(resetStations());
-          dispatch(updateGameStatus('GAME'));
-          dispatch(clearFaultFunc());
-          // }, 3000);
-          // return () => clearTimeout(timeout);
-        } else if (redTeam.fault.length && !blueTeam.isActive) {
-          // const timeout = setTimeout(() => {
-          dispatch(updateGameStatus('GAME'));
-          dispatch(blueTeamActive(true));
-          dispatch(clearFaultFunc());
-          dispatch(resetStations());
-          // }, 3000);
-          // return () => clearTimeout(timeout);
-        } else if (!blueTeam.isActive && !redTeam.isActive) {
-          dispatch(redTeamActiveButton(true));
-          dispatch(blueTeamActiveButton(true));
-        }
-      } else if (blueTeam.fault.length === 1 && redTeam.fault.length === 1) {
+      if (blueTeam.fault.length === 1 && redTeam.fault.length === 1) {
         dispatch(updateGameStatus('BOARD-BLOCKED'));
       } else if (anyAnswerVisible) {
         if (blueTeam.fault.length || redTeam.fault.length) {

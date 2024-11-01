@@ -5,18 +5,27 @@ import { colorBase } from '@__colors/colorBase';
 import { MissedButton } from './sections/MissedButton';
 import { useAppDispatch, useAppSelector } from '@__store/hooks';
 import {
+  blueFaultButtonDisabledFunc,
   blueTeamActive,
   clearFaultFunc,
+  redFaultButtonDisabledFunc,
   redTeamActive,
   updateBlueTotalScore,
   updateRedTotalScore,
 } from '@__store/slices/teamsState';
 import { updateSession } from '@__store/slices/globalStateReducer';
-import { updateGameScore, updateGameStatus } from '@__store/slices/gameState';
+import {
+  boardBlockedFunc,
+  showEndGameButtonFunc,
+  showNextRoundButtonFunc,
+  updateGameScore,
+  updateGameStatus,
+} from '@__store/slices/gameState';
 import { CollectButton } from './sections/CollectButton';
 import { ActiveButton } from './sections/ActiveButton';
 import { NameModal } from './sections/NameModal';
 import FaultCounter from './sections/FaultCounter';
+import checkAnswerVisibility from '@__utils/checksAnswer';
 
 interface IGameTeam {
   teamData: ITeam;
@@ -29,7 +38,14 @@ export const GameTeam: FC<IGameTeam> = ({ teamData }) => {
   const redIsActive = useAppSelector((state) => state.teams.redTeam.stationActive);
   const blueIsActive = useAppSelector((state) => state.teams.blueTeam.stationActive);
 
-  const { score, gameStatus } = useAppSelector((state) => state.gameState);
+  const { score, gameStatus, roundNumber, currentQuestion } = useAppSelector(
+    (state) => state.gameState
+  );
+
+  const {
+    allVisible,
+  } = checkAnswerVisibility(currentQuestion.answers);
+  const { questions } = useAppSelector((state) => state.globalState);
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const openChangeNameModal = (open: boolean) => {
@@ -38,23 +54,35 @@ export const GameTeam: FC<IGameTeam> = ({ teamData }) => {
 
   const handleCollectScore = () => {
     dispatch(updateGameScore(0));
+    dispatch(boardBlockedFunc(false));
 
     if (teamType === 'BLUE') {
       dispatch(updateBlueTotalScore(score));
     } else {
       dispatch(updateRedTotalScore(score));
     }
+    if (allVisible) {
+      if (roundNumber < questions.length - 1) {
+        dispatch(showNextRoundButtonFunc(true));
+      } else {
+        dispatch(showEndGameButtonFunc(true));
+      }
+    }
     dispatch(updateGameStatus('SUMMARY-GAME'));
   };
 
   const handleIsActive = () => {
-    dispatch(updateGameStatus('GAME'));
     dispatch(clearFaultFunc());
     dispatch(updateSession(true));
+    dispatch(updateGameStatus('GAME'));
+    dispatch(boardBlockedFunc(false));
     if (teamType === 'BLUE') {
-      return dispatch(blueTeamActive(true));
+      dispatch(blueTeamActive(true));
+      dispatch(blueFaultButtonDisabledFunc(false));
+    } else {
+      dispatch(redTeamActive(true));
+      dispatch(redFaultButtonDisabledFunc(false));
     }
-    return dispatch(redTeamActive(true));
   };
 
   const teamVarriable =
@@ -73,11 +101,11 @@ export const GameTeam: FC<IGameTeam> = ({ teamData }) => {
   const teamBackgroundColor =
     teamType === 'BLUE'
       ? blueIsActive
-        ? colorBase.whiteDefault
-        : colorBase.backgroundMain
+        ? colorBase.blueDefault
+        : colorBase.backgroundDark
       : redIsActive
         ? colorBase.redShadow
-        : colorBase.backgroundMain;
+        : colorBase.backgroundDark;
 
   const shouldBeActive =
     (teamData.isActive && teamData.fault.length < 3) ||
@@ -134,8 +162,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
+    backgroundColor: colorBase.backgroundDark,
   },
   actionWrapper: {
+    backgroundColor: colorBase.backgroundDark,
     flex: 1,
     paddingVertical: 24,
     justifyContent: 'space-between',
@@ -161,6 +191,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderBottomWidth: 2,
     borderBottomColor: colorBase.mainGold,
+    backgroundColor: colorBase.backgroundDark,
   },
   nameText: {
     fontSize: 36,
@@ -173,7 +204,6 @@ const styles = StyleSheet.create({
     margin: 8,
     borderRadius: 50,
     padding: 16,
-    borderWidth: 2,
   },
   award: {
     borderWidth: 2,

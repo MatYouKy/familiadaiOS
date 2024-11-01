@@ -39,7 +39,7 @@ interface IActionButton {
 
 const getIcon = (
   action: ActionIconType,
-  color: ColorAliases = 'white',
+  color: ColorAliases = 'whiteDefault',
   fill: ColorAliases = 'none',
   size: SizeAliases = 'medium',
   rest?: Partial<CustomSVGIntrface>

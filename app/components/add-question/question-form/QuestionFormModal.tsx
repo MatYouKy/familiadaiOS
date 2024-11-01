@@ -8,13 +8,12 @@ import { QuestionTextModal } from './QuestionTextModal';
 import { AddAnswersList } from './AddAnswersList';
 import { AnswerModal } from './AnswerModal';
 import { IconButton } from '@__components/ui/actions/iconButtons/IconButton';
-import { useAppDispatch, useAppSelector } from '@__store/hooks';
+import { useAppDispatch } from '@__store/hooks';
 import {
   addQuestionToCompetitionFunc,
   editQuestionFromCompetitionFunc,
 } from '@__store/slices/competitionsStateSlice';
 import { snackbarActionFunc } from '@__store/slices/snackbarSlice';
-import { Snackbar } from 'react-native-paper';
 
 export type FormAnswerType = Omit<IAnswer, 'score'> & { score: string };
 export type FormQuestionType = Omit<IQuestion, 'answers'> & { answers: FormAnswerType[] };
@@ -60,14 +59,17 @@ export const QuestionFormModal: FC<IQuestionFormModal> = ({
     return question && editMode ? question : initialQuestion;
   });
 
+  const handleInputQuestionText = (inputQuestionText: string) => {
+    setNewQuestion((prev) => {
+      return { ...prev, question: inputQuestionText };
+    });
+  };
+
   const [answerModalOpen, openAnswerModal, closeAnswerModal] = useModal();
+  const [errorText, setErrorText] = useState<string>('');
   const [answerEditModalOpen, openAnswerEditModal, closeAnswerEditModal] = useModal();
   const [questionTextModalOpen, openQuestionTextModal, closeQuestionTextModal] =
     useModal();
-
-  const snackbarState = useAppSelector((state) => state.snackbarAction);
-
-  const [errorText, setErrorText] = useState<string>('');
 
   useEffect(() => {
     if (question && editMode) {
@@ -105,9 +107,9 @@ export const QuestionFormModal: FC<IQuestionFormModal> = ({
     setNewAnswer((prev) => ({ ...prev, [inputIdentifier]: value }));
   };
 
-  const handleChangeQuestionText = (value: string) => {
-    setNewQuestion((prev) => ({ ...prev, question: value }));
-  };
+  // const handleChangeQuestionText = (value: string) => {
+  //   setNewQuestion((prev) => ({ ...prev, question: value }));
+  // };
 
   const updateAnswers = (answers: IAnswer[], updatedAnswer: IAnswer): IAnswer[] => {
     const index = answers.findIndex((answer) => answer.id === updatedAnswer.id);
@@ -171,7 +173,7 @@ export const QuestionFormModal: FC<IQuestionFormModal> = ({
       dispatch(addQuestionToCompetitionFunc(newQuestion));
       dispatch(
         snackbarActionFunc({
-          message: 'Poprawnie dodałeś wydarzenie!',
+          message: 'Poprawnie dodałeś pytanie!',
           status: 'SUCCESS',
         })
       );
@@ -195,10 +197,11 @@ export const QuestionFormModal: FC<IQuestionFormModal> = ({
               </View>
             </Pressable>
             <QuestionTextModal
+              handleInputQuestionText={handleInputQuestionText}
               openQuestionTextModal={questionTextModalOpen}
               value={newQuestion.question}
               handleOpenQuestionTextModaAction={closeQuestionTextModal}
-              handleChangeQuestionText={handleChangeQuestionText}
+              // handleChangeQuestionText={handleChangeQuestionText}
             />
           </View>
           <View>
@@ -251,6 +254,7 @@ export const QuestionFormModal: FC<IQuestionFormModal> = ({
             onPress={onClose}
             variant="OUTLINED"
             backgroundColor="redDark"
+            color="whiteDefault"
             title="Anuluj"
           />
           {newQuestion.answers.length !== 0 &&
@@ -258,20 +262,12 @@ export const QuestionFormModal: FC<IQuestionFormModal> = ({
               <ActionButton
                 onPress={handleSubmit}
                 backgroundColor="successMain"
+                color="whiteDefault"
                 title={editMode ? 'Zapisz zmiany' : 'Dodaj pytanie do wydarzenia!'}
               />
             )}
         </View>
       </View>
-      <Snackbar
-        visible={snackbarState.message !== ''}
-        style={{ position: 'absolute' }}
-        onDismiss={function (): void {
-          throw new Error('Function not implemented.');
-        }}
-      >
-        <Text>Dupa</Text>
-      </Snackbar>
     </Modal>
   );
 };

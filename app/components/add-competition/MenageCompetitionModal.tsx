@@ -135,8 +135,10 @@ export const MenageCompetitionModal: FC<IMenageCompetitionModal> = ({
                   : 'Wpisz nazwę Wydarzenia',
                 value: state.competitionTitle,
               }}
+              variant="underline"
               isError={isTitleError}
-              errorText="Nazwa wydarzenia musi mieć co najmniej 3 znaki."           />
+              errorText="Nazwa wydarzenia musi mieć co najmniej 3 znaki."
+            />
             <TouchableOpacity onPress={dataPickerModalFunc.bind(this, true)}>
               <View style={styles.dateInput}>
                 <Text style={[styles.dateText, isDateError && styles.errorText]}>
@@ -199,12 +201,14 @@ export const MenageCompetitionModal: FC<IMenageCompetitionModal> = ({
             onPress={closeModal}
             variant="OUTLINED"
             backgroundColor="redDark"
+            color="whiteDefault"
             title="Anuluj"
           />
           <View style={styles.submitButtonContainer}>
             <ActionButton
               onPress={actionSubmitButton}
               backgroundColor="successMain"
+              color="whiteDefault"
               title={editMode ? 'Aktualizuj Wydarzenie' : 'Dodaj Wydarzenie'}
               disabled={isFormInvalid}
             />
@@ -218,7 +222,7 @@ export const MenageCompetitionModal: FC<IMenageCompetitionModal> = ({
 const styles = StyleSheet.create({
   appContainer: {
     flex: 1,
-    backgroundColor: colorBase.backgroundMain,
+    backgroundColor: colorBase.backgroundDark,
   },
   heading: {
     color: colorBase.bluePastel,

@@ -6,6 +6,7 @@ import { connectState } from '@__store/slices/webSocketSlice';
 import { ConnectType, IConnect, ISnackbar, IWebSocketMessage } from '@__types/game.type';
 import { snackbarActionFunc } from '@__store/slices/snackbarSlice';
 import { Alert } from 'react-native';
+import { DevicesType } from '@__types/connect.type';
 
 const useIpConnection = () => {
   const { storedValue, setValue } = useAsyncStorage('lastIp');
@@ -14,6 +15,9 @@ const useIpConnection = () => {
   const [websocketMessage, setMessage] = useState<IWebSocketMessage['payload'] | null>(
     null
   );
+  const [connectedDevices, setConnectedDevices] = useState<
+    { id: string; type: DevicesType }[]
+  >([]);
   const [ipAddress, setIpAddress] = useState<string>('');
   const [restoreCounter, setRestoreCounter] = useState(0);
   const [connection, setConnection] = useState(false);
@@ -83,13 +87,28 @@ const useIpConnection = () => {
         message: 'Uzyskano połączenie z WebSocket',
       };
       dispatch(snackbarActionFunc(snackbarRestore.current));
-      ws.send(JSON.stringify({ type: 'connect', payload: 'admin' }));
+      ws.send(JSON.stringify({ type: 'connect', payload: 'ADMIN-TABLET' }));
     };
 
     ws.onmessage = (event) => {
       try {
         const parsedData = JSON.parse(event.data);
-        setMessage(parsedData);
+        if (parsedData.type === 'connected-devices') {
+          setConnectedDevices(parsedData.payload); // Zaktualizuj stan podłączonych urządzeń
+        }
+        // Obsługa typu red-team, blue-team, board (dane gry)
+        else if (
+          parsedData.type === 'red-team' ||
+          parsedData.type === 'blue-team' ||
+          parsedData.type === 'board'
+        ) {
+          // Przetwarzanie danych gry
+          setMessage(parsedData.payload);
+        }
+        // Dodaj obsługę innych typów wiadomości w miarę potrzeby
+        else {
+          console.warn(`Unknown message type: ${parsedData.type}`);
+        }
       } catch (error) {
         snackbarRestore.current = {
           status: 'ERROR',
@@ -346,6 +365,7 @@ const useIpConnection = () => {
     websocketMessage,
     sendWebSocketMessage,
     webSocketStatus,
+    connectedDevices,
   };
 };
 

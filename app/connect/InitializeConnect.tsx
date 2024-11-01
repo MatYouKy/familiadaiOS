@@ -34,7 +34,7 @@ export const InitializeConnect: FC<IInitializeConnect> = ({
   status,
 }) => {
   const [inputIpValues, setInputIpValues] = useState<InputTextValidProps>({
-    ipAddressValue: '',
+    value: '',
     isValid: true,
     isTouched: false,
   });
@@ -44,7 +44,7 @@ export const InitializeConnect: FC<IInitializeConnect> = ({
       return {
         ...currentValues,
         isValid: true,
-        ipAddressValue: ipAddress,
+        value: ipAddress,
       };
     });
   };
@@ -56,14 +56,14 @@ export const InitializeConnect: FC<IInitializeConnect> = ({
   };
 
   const handleSubmit = () => {
-    if (validateIpAddress(inputIpValues.ipAddressValue) && inputIpValues.isTouched) {
-      validIpAddress(inputIpValues.ipAddressValue);
+    if (validateIpAddress(inputIpValues.value) && inputIpValues.isTouched) {
+      validIpAddress(inputIpValues.value);
       handleIpValueCheck();
     } else {
       setInputIpValues((currentValues) => {
         return {
           ...currentValues,
-          isValid: validateIpAddress(inputIpValues.ipAddressValue),
+          isValid: validateIpAddress(inputIpValues.value),
         };
       });
     }
@@ -77,6 +77,12 @@ export const InitializeConnect: FC<IInitializeConnect> = ({
       };
     });
   };
+
+    const handleKeyPress = (e: any) => {
+      if (e.nativeEvent.key === 'Enter') {
+        handleSubmit();
+      }
+    };
 
   return (
     <Modal visible={!connection} style={styles.modal}>
@@ -99,12 +105,13 @@ export const InitializeConnect: FC<IInitializeConnect> = ({
                   errorText="Podaj prawidłowy adres IP"
                   inputProps={{
                     onChangeText: handleIpValue,
+                    onKeyPress: handleKeyPress,
                     onFocus: handleFocus,
                     placeholder: 'Wpisz Adres IP',
                     textAlign: 'center',
-                    maxLength: 12,
-                    value: inputIpValues.ipAddressValue,
-                    keyboardType: 'decimal-pad',
+                    maxLength: 15,
+                    value: inputIpValues.value,
+                    keyboardType: 'number-pad',
                     autoFocus: true,
                     autoCorrect: false,
                   }}
@@ -138,10 +145,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colorBase.backgroundMain,
+    backgroundColor: colorBase.backgroundDark,
   },
   ipContainer: {
-    // borderWidth: 2,
     width: 700,
     height: 300,
     flexDirection: 'column',
